@@ -9,7 +9,7 @@ public class Deadline {
     private boolean isDone;
 
     /**
-     * Constructs a Deadline with the given category, dueDate, isDone.
+     * Constructs a Deadline with the given category, dueDate.
      *
      * @param category The category of the deadline.
      * @param dueDate  The due date of the deadline.
