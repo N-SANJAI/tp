@@ -26,26 +26,26 @@ public class FilterCommand extends Command {
     @Override
     public void execute(ApplicationList applications, Ui ui, Storage storage) throws InternTrackrException {
         if (isClear) {
-            System.out.println("Filter cleared. Showing all applications:");
-            for (int i = 0; i < applications.getSize(); i++) {
-                System.out.println((i + 1) + ". " + applications.getApplication(i).toString());
+            ui.showMessage("Filter cleared. Showing all applications:");
+            for (int i = 1; i <= applications.getSize(); i++) {
+                ui.showMessage(i + ". " + applications.getApplication(i).toString());
             }
             return;
         }
 
-        System.out.println("Here are the applications with status: " + this.status);
+        ui.showMessage("Here are the applications with status: " + this.status);
         int matchCount = 0;
 
-        for (int i = 0; i < applications.getSize(); i++) {
+        for (int i = 1; i <= applications.getSize(); i++) {
             Application app = applications.getApplication(i);
             if (app.getStatus().equalsIgnoreCase(this.status)) {
-                System.out.println((i + 1) + ". " + app.toString());
+                ui.showMessage(i + ". " + app.toString());
                 matchCount++;
             }
         }
 
         if (matchCount == 0) {
-            System.out.println("No applications found with status: " + this.status);
+            ui.showMessage("No applications found with status: " + this.status);
         }
     }
 }

@@ -1,2 +1,12 @@
+add c/Google r/Software Engineer
+add c/Meta r/Data Scientist
+add c/Amazon r/Backend Engineer
+list
+overview
+status 1 s/applied
+status 2 s/interview
+filter s/applied
+filter clear
+delete 2
 list
 exit
