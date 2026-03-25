@@ -72,7 +72,21 @@ public class Application {
     }
 
     public static boolean isValidStatus(String status) {
-        return VALID_STATUSES.contains(status);
+        for (String valid : VALID_STATUSES) {
+            if (valid.equalsIgnoreCase(status)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String getNormalizedStatus(String status) {
+        for (String valid : VALID_STATUSES) {
+            if (valid.equalsIgnoreCase(status)) {
+                return valid;
+            }
+        }
+        return status;
     }
 
     /**
