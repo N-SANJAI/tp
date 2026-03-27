@@ -1,0 +1,19 @@
+@startuml
+participant ":InternTrackr" as IT
+participant ":Ui" as UI
+participant ":Parser" as P
+participant "c:Command" as C
+participant ":Storage" as ST
+
+IT -> UI : readCommand()
+UI --> IT : fullCommand
+IT -> UI : showLine()
+IT -> P : parse(fullCommand)
+P --> IT : c
+IT -> C : execute(applications, ui, storage)
+C -> UI : showMessage(...)
+C -> ST : save(...) [if applicable]
+IT -> C : isExit()
+C --> IT : false
+IT -> UI : showLine()
+@enduml

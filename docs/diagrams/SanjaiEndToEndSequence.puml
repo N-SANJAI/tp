@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant "c:OverviewCommand" as OC
+participant ":ApplicationList" as AL
+
+User -> UI : types "overview"
+UI -> IT : readCommand()
+IT --> UI : "overview"
+IT -> P : parse("overview")
+P --> IT : c (OverviewCommand)
+IT -> OC : execute(applications, ui, null)
+OC -> AL : getSize()
+AL --> OC : 3
+OC -> UI : showMessage("Overview:")
+OC -> UI : showMessage("You are currently tracking 3 applications.")
+OC -> UI : showMessage("Keep up the momentum!")
+OC --> IT :
+IT -> UI : showLine()
+UI -> User : displays output
+@enduml

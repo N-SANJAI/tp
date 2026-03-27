@@ -1,0 +1,19 @@
+@startuml
+participant ":InternTrackr" as IT
+participant ":Ui" as UI
+participant ":Storage" as ST
+participant ":ApplicationList" as AL
+
+[-> IT : InternTrackr(filePath)
+IT -> UI : new Ui()
+IT -> ST : new Storage(filePath)
+IT -> ST : load()
+alt load successful
+    ST --> IT : ArrayList<Application>
+    IT -> AL : new ApplicationList(list)
+else InternTrackrException
+    ST --> IT : throws InternTrackrException
+    IT -> UI : showLoadingError()
+    IT -> AL : new ApplicationList()
+end
+@enduml
