@@ -233,6 +233,109 @@ The sequence diagram below shows the full flow of the `list` command:
 
 ---
 
+<!-- @@author Emry -->
+
+---
+### Filter and Status Feature Implementation
+
+**Author:** Emry
+
+### 1. Filter Feature Implementation
+
+The `filter` feature allows users to navigate large lists of applications by isolating entries that match a specific recruitment stage. It also provides a mechanism to reset the view to the full list.
+
+#### 1.1 Implementation Details
+
+The feature is implemented through the `FilterCommand` and `FilterCommandParser` classes. The logic is designed to be case-insensitive and resilient to user input variations.
+
+**1.1.1 Parsing Logic**
+The `FilterCommandParser#parse()` method handles the initial input processing:
+1.  **Empty Check**: Verifies if arguments exist; otherwise, it throws an `InternTrackrException` explaining the correct usage.
+2.  **Reset Detection**: Checks if the argument is exactly `clear` (case-insensitive). If so, it returns a `FilterCommand` with the `isClear` flag set to `true`.
+3.  **Prefix Validation**: Ensures status-based filters start with the `s/` prefix.
+4.  **Cleaning**: Extracts the status string, removes any accidental quotation marks, and trims whitespace before passing it to the command constructor.
+
+**1.1.2 Execution Logic**
+When `FilterCommand#execute()` is called, it performs the following steps:
+1.  **Branching**: If the `isClear` flag is active, it immediately calls `handleClearFilter()` to print every application in the list.
+2.  **Validation**: For status filters, it queries `Application#isValidStatus()` to ensure the input matches one of the recognized categories: `Applied`, `Pending`, `Interview`, `Offered`, `Rejected`, or `Accepted`.
+3.  **Normalization**: It retrieves the "canonical" version of the status (e.g., "iNtErViEw" becomes "Interview") via `Application#getNormalizedStatus()` to ensure a successful match.
+4.  **Iteration**: It loops through the `ApplicationList` using a 1-based index.
+5.  **Matching**: For each application, it compares the current status with the search term. If they match, the application is passed to the `Ui` for display.
+6.  **Edge Case Handling**: If the loop completes and the `matchCount` is zero, it informs the user that no applications currently hold that status.
+
+#### 1.2 Sequence Diagrams
+
+The diagram below shows the interaction when a user inputs a filter command:
+
+![Filter Parsing Sequence Diagram](images/EmryFilterCommandSequence.png)
+
+The diagram below shows the internal logic of the `FilterCommand` during execution:
+
+![Filter Execution Sequence Diagram](images/EmryFilterLogic.png)
+
+#### 1.3 Design Considerations
+
+**Aspect: Normalization vs. Literal Matching**
+* **Alternative 1**: Match the user's input exactly against the stored data.
+  * *Pros*: Faster execution as no string transformation is needed.
+  * *Cons*: If a user types `filter s/applied` but the data is stored as `Applied`, they get zero results, which is counter-intuitive.
+* **Alternative 2 (Current Choice)**: Normalize both the input and the comparison target to Title Case.
+  * *Reasoning*: This provides a "Search-like" experience where the user does not need to remember exact capitalization, reducing friction.
+
+---
+
+### 2. Status Feature Implementation
+
+The `status` command allows users to update the state of an existing internship application. This is a critical component of the application lifecycle, moving entries from "Applied" toward "Offered" or "Rejected."
+
+#### 2.1 Implementation Details
+
+The `status` feature is handled by `StatusCommand` and `StatusCommandParser`, integrating directly with both the Model and Storage components.
+
+**2.1.1 Parsing Logic**
+The `StatusCommandParser#parse()` method breaks down the complex command string:
+1.  **Delimiter Check**: It looks for the ` s/` prefix. If missing, it throws an error showing the `status INDEX s/STATUS` format.
+2.  **Index Extraction**: It splits the string to isolate the index. It attempts to parse this as an `Integer`; if it fails (e.g., the user typed `status first s/...`), it throws a `NumberFormatException` caught and rethrown as an `InternTrackrException`.
+3.  **Status Extraction**: It extracts the string after the `s/` prefix, trimming it for processing.
+
+**2.1.2 Execution Logic**
+The `StatusCommand#execute()` method follows a strict validation-then-update pipeline:
+1.  **Dependency Assertion**: Uses Java `assert` statements to ensure `ApplicationList`, `Ui`, and `Storage` are not null.
+2.  **Bounds Validation**: Checks if the provided index is greater than 0 and less than or equal to `applications.getSize()`. If out of bounds, it provides a user-friendly error message showing the valid range.
+3.  **Content Validation**: Rejects empty status strings and checks against the master list of valid statuses (Applied, Pending, etc.) via `Application#isValidStatus()`.
+4.  **The Update**: Retrieves the target `Application` object and updates its internal status field with the normalized string.
+5.  **Immediate Persistence**: Unlike read-only commands, this command immediately calls `storage.save()`. This ensures that the progress is saved to the hard drive instantly.
+
+#### 2.2 Sequence Diagrams
+
+The following diagram shows the parsing logic for a status update:
+
+![Status Parsing Sequence Diagram](images/EmryStatusLogic.png)
+
+The diagram below illustrates how the command interacts with the Model and Storage components:
+
+![Status Execution Sequence Diagram](images/EmryStatusCommandSequence.png)
+
+#### 2.3 Design Considerations
+
+**Aspect: Validation of Status Strings**
+* **Alternative 1**: Allow any text as a status.
+  * *Pros*: Users can create custom statuses like "Waiting for HR."
+  * *Cons*: Breaks the `filter` command's ability to categorize data and risks making the storage file messy.
+* **Alternative 2 (Current Choice)**: Use a strict whitelist of 6 valid statuses.
+  * *Reasoning*: By forcing users into a specific workflow, we ensure the data remains structured enough for the `Overview` and `Filter` features to remain accurate and useful.
+
+**Aspect: Auto-Save vs. Manual Save**
+* **Choice**: Triggering `Storage#save()` automatically.
+  * *Reasoning*: In a CLI environment, users often exit abruptly. Since status changes represent significant time investments (like receiving an offer), losing that update due to a crash or sudden exit is unacceptable. Auto-saving after every update prioritizes data safety.
+
+---
+
+<!-- @@author -->
+
+---
+
 
 ## Product scope
 ### Target user profile

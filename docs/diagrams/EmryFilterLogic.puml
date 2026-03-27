@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+participant ":Parser" as P
+participant ":FilterCommandParser" as FCP
+participant "f:FilterCommand" as FC
+
+[-> P : parseCommand("filter Applied")
+activate P
+P -> FCP : parse("Applied")
+activate FCP
+
+create FC
+FCP -> FC : FilterCommand("Applied")
+activate FC
+FC --> FCP : f
+deactivate FC
+
+FCP --> P : f
+deactivate FCP
+[<-- P : f
+deactivate P
+
+[-> FC : execute()
+activate FC
+note right: Logic to loop through ApplicationList\nand filter by status
+[<-- FC
+deactivate FC
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+hide footbox
+participant "s:StatusCommand" as SC
+participant "list:ApplicationList" as AL
+participant "app:Application" as A
+participant ":Storage" as ST
+
+[-> SC : execute(list, ui, storage)
+activate SC
+
+SC -> AL : getApplication(index)
+activate AL
+AL --> SC : app
+deactivate AL
+
+SC -> A : setStatus("Offered")
+activate A
+deactivate A
+
+SC -> ST : save(list)
+activate ST
+ST --> SC
+deactivate ST
+
+[<-- SC : "Status updated..."
+deactivate SC
+@enduml

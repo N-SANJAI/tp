@@ -1,0 +1,30 @@
+@startuml
+actor User
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant "c:FilterCommand" as FC
+participant ":ApplicationList" as AL
+participant ":Ui" as UI
+
+User -> IT : "filter Applied"
+IT -> P : parse("filter Applied")
+create FC
+P -> FC : FilterCommand("Applied")
+P --> IT : c
+IT -> FC : execute(applications, ui, storage)
+
+FC -> AL : getSize()
+loop for each application (1 to size)
+    FC -> AL : getApplication(i)
+    AL --> FC : app
+    alt app.getStatus() matches "Applied"
+        FC -> UI : showMessage(i + ". " + app.toString())
+    end
+end
+
+alt no matches found
+    FC -> UI : showMessage("No applications found...")
+end
+
+IT -> UI : showLine()
+@enduml
