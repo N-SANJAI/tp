@@ -85,6 +85,155 @@ The diagram below shows the full flow — from the user typing `overview` all th
 
 ---
 
+<!-- @@author Shyamal -->
+
+### Storage, Model, and List Feature Implementation
+
+**Author:** Shyamal
+
+---
+
+#### 1. Storage Component
+
+The `Storage` class is responsible for persisting all internship application data to a
+human-editable text file and reloading it when the app starts. This ensures that data
+survives between sessions without requiring a database.
+
+**1.1 File Format**
+
+Each application is stored as a single pipe-delimited line in `data/interntrackr.txt`.
+There are two possible formats depending on whether a deadline has been set:
+```
+company | role | status
+company | role | status | deadlineType | dueDate | isDone
+```
+
+This format was chosen because it is human-readable and easy to edit manually,
+satisfying the course constraint of using a human-editable storage format.
+
+**1.2 Saving Applications**
+
+When a command modifies the list (e.g. `add`, `delete`, `status`), it calls
+`Storage#save()` with the current list. The method writes each application's
+`toStorageString()` output as a new line in the file, creating the `data/` folder
+if it does not exist yet.
+
+**1.3 Loading Applications**
+
+On startup, `Storage#load()` reads the file line by line and reconstructs
+`Application` objects. The method handles two cases:
+
+* **3 parts** (`company | role | status`) — loads a plain `Application` with no deadline.
+* **6 parts** (`company | role | status | deadlineType | dueDate | isDone`) —
+  reconstructs a `Deadline` object and attaches it to the `Application`.
+
+Any line with fewer than 3 parts, an unrecognised status, or an unparseable date throws
+an `InternTrackrException` with a clear message indicating the corrupted line number.
+
+The sequence diagram below shows how `Storage#load()` behaves during app startup:
+
+![Storage Load Sequence Diagram](images/ShyamalStorageLoadSequence.png)
+
+The sequence diagram below shows how `Storage#save()` is triggered after a command executes:
+
+![Storage Save Sequence Diagram](images/ShyamalStorageSaveSequence.png)
+
+**1.4 Design Considerations**
+
+**Aspect: Storage format for deadlines**
+
+* **Alternative 1:** Store each application and its deadline as separate lines,
+  linked by an index.
+  * Pros: Cleaner separation of concerns.
+  * Cons: Harder to parse, more error-prone, breaks human-editability.
+* **Alternative 2 (Current Choice):** Inline the deadline fields into the same line
+  as the application using additional pipe-separated fields.
+  * Pros: Simple to parse, easy to read and edit manually, single source of truth per application.
+  * Cons: The line gets longer when a deadline is present, but remains readable.
+
+**Aspect: Handling corrupted data**
+
+* **Alternative 1:** Skip corrupted lines silently and continue loading.
+  * Pros: App always starts up even with bad data.
+  * Cons: Silent data loss — the user would never know entries were dropped.
+* **Alternative 2 (Current Choice):** Throw an `InternTrackrException` immediately
+  and start with an empty list.
+  * Pros: The user is explicitly warned that their data file is corrupted.
+  * Cons: All data becomes inaccessible until the user fixes the file manually.
+  * **Reasoning:** Transparency about data integrity is more important than convenience.
+    The text format makes it easy for the user to inspect and fix the file themselves.
+
+---
+
+#### 2. ApplicationList Defensive Design
+
+The `ApplicationList` class manages the in-memory list of applications. Two key
+defensive design decisions were made to prevent misuse by other components.
+
+**2.1 Unmodifiable List**
+
+`ApplicationList#getApplications()` returns a `Collections.unmodifiableList()` view
+instead of the raw `ArrayList`. This prevents any external caller from directly
+adding, removing, or clearing entries without going through the proper methods
+(`addApplication()`, `deleteApplication()`), which include bounds-checking and logging.
+```java
+public List<Application> getApplications() {
+    return Collections.unmodifiableList(applications);
+}
+```
+
+Any attempt to call `.add()` or `.remove()` on the returned list will throw an
+`UnsupportedOperationException` at runtime, making misuse immediately visible
+during testing.
+
+**2.2 Index Bounds Checking**
+
+Both `getApplication(int index)` and `deleteApplication(int index)` validate the
+1-based index before accessing the underlying list. If the index is out of range,
+an `InternTrackrException` is thrown with a user-friendly message indicating the
+valid range.
+```java
+if (index < 1 || index > applications.size()) {
+    throw new InternTrackrException("Invalid index: " + index
+        + ". Please enter a number between 1 and " + applications.size() + ".");
+}
+```
+
+This prevents `IndexOutOfBoundsException` from propagating up to the user as a
+cryptic crash.
+
+---
+
+#### 3. ListCommand and UI Abstraction
+
+The `list` command displays all currently tracked applications to the user.
+
+**3.1 Implementation**
+
+`ListCommand#execute()` iterates over the `ApplicationList` using 1-based indices
+and calls `Ui#showMessage()` for each entry. If the list is empty, a friendly prompt
+is shown instead.
+
+**3.2 Design Rationale: Using `Ui` instead of `System.out`**
+
+An earlier version of `ListCommand` used `System.out.println()` directly. This was
+refactored to use `Ui#showMessage()` instead, consistent with every other command
+in the codebase.
+
+* **Why it matters:** Commands that bypass `Ui` are untestable — you cannot intercept
+  or assert on `System.out` output in JUnit tests without capturing streams.
+  By routing all output through `Ui`, tests can subclass `Ui` with a capturing
+  override (as seen in `DeadlineCommandTest`) to verify output without touching the console.
+
+The sequence diagram below shows the full flow of the `list` command:
+
+![List Command Sequence Diagram](images/ShyamalListCommandSequence.png)
+
+<!-- @@author -->
+
+---
+
+
 ## Product scope
 ### Target user profile
 

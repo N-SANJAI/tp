@@ -1,0 +1,33 @@
+@startuml
+actor User
+participant ":InternTrackr" as IT
+participant ":Storage" as S
+participant ":ApplicationList" as AL
+participant ":Application" as A
+
+User -> IT : launches app
+IT -> S : load()
+S -> S : check file exists
+
+alt file does not exist
+    S --> IT : empty ArrayList
+else file exists
+    loop for each line in file
+        S -> S : split line by " | "
+        alt 3 parts (no deadline)
+            S -> A : new Application(company, role, status)
+            A --> S : application
+        else 6 parts (with deadline)
+            S -> A : new Application(company, role, status, deadline)
+            A --> S : application
+        else corrupted line
+            S --> IT : throws InternTrackrException
+        end
+    end
+    S --> IT : ArrayList<Application>
+end
+
+IT -> AL : new ApplicationList(applications)
+AL --> IT : applicationList
+IT --> User : app ready
+@enduml

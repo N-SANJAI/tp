@@ -1,0 +1,30 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant "c:ListCommand" as LC
+participant ":ApplicationList" as AL
+
+User -> UI : types "list"
+IT -> UI : readCommand()
+UI --> IT : "list"
+IT -> P : parse("list")
+P --> IT : c (ListCommand)
+IT -> LC : execute(applications, ui, storage)
+LC -> AL : getSize()
+AL --> LC : size
+
+alt list is empty
+    LC -> UI : showMessage("No applications found.")
+else list has entries
+    LC -> UI : showMessage("Here are your internship applications:")
+    loop for each application (1 to size)
+        LC -> AL : getApplication(i)
+        AL --> LC : application
+        LC -> UI : showMessage(i + ". " + app.toString())
+    end
+end
+
+UI --> User : displays output
+@enduml

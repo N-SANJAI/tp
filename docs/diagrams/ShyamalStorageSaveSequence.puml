@@ -1,0 +1,26 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant "c:AddCommand" as AC
+participant ":ApplicationList" as AL
+participant ":Storage" as S
+
+User -> UI : types "add c/Google r/SWE"
+IT -> UI : readCommand()
+UI --> IT : "add c/Google r/SWE"
+IT -> P : parse("add c/Google r/SWE")
+P --> IT : c (AddCommand)
+IT -> AC : execute(applications, ui, storage)
+AC -> AL : addApplication(application)
+AL --> AC : done
+AC -> S : save(applications)
+S -> S : create data/ folder if needed
+loop for each application
+    S -> S : write toStorageString() to file
+end
+S --> AC : done
+AC -> UI : showMessage(...)
+UI --> User : displays output
+@enduml
