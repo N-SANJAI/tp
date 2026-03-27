@@ -88,18 +88,37 @@ The diagram below shows the full flow — from the user typing `overview` all th
 ## Product scope
 ### Target user profile
 
-{Describe the target user profile}
+University students applying to many internships who want a quick, simple way to track where each application stands, 
+without signing up for yet another website, especially those who prefer typing and shortcuts over messy Excel sheets.
 
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+Students currently use spreadsheets or Notion templates. 
+InternTrackr will help internship applicants avoid losing track of many applications by providing a simple way to record and recall each company’s current status and key details. 
+Reduces missed deadlines and confusion caused by scattered notes, emails, and messy spreadsheets.
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+| Version | As a ... | I want to ...                                                    | So that I can ...                                                           |
+|---------|----------|------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| v1.0    | student  | add a new internship application (company, role)                 | start tracking my progress and keep records in one place                    |
+| v1.0    | user     | delete an application                                            | remove entries made in error or that are no longer relevant                 |
+| v1.0    | user     | view a list of all applications                                  | see my entire job hunt at a glance                                          |
+| v1.0    | user     | edit/update an application status (e.g., Applied → Interview)    | keep my records accurate and see my current progress                        |
+| v1.0    | user     | filter applications by status                                    | identify which companies are waiting on me (e.g., "Pending OA")             |
+| v1.0    | student  | add deadlines (OAs, submission dates, offer expiries)            | avoid missing critical windows and stay on schedule                         |
+| v1.0    | user     | mark a deadline task as done                                     | track completed tasks and maintain my schedule                              |
+| v1.0    | user     | view a summary of my application statuses and upcoming deadlines | quickly assess my overall progress and prioritize what needs attention next |
+| v2.0    | user     | clear all data                                                   | reset the app for a new semester or application cycle                       |
+| v2.0    | student  | detect and prevent duplicate applications                        | avoid making professional mistakes with companies                           |
+| v2.0    | user     | see total application counts broken down by status               | track if I am meeting my weekly application quotas                          |
+| v2.0    | user     | use a `help` command                                             | learn how to use the tool without needing external documentation            |
+| v2.0    | user     | archive rejected applications                                    | keep a history of outcomes without cluttering the active view               |
+| v2.0    | student  | add salary and benefit information to an offer                   | compare compensation packages and make informed decisions                   |
+| v2.0    | user     | add recruiter contact information to an application              | easily find who to contact for follow-ups                                   |
+| v2.0    | user     | add notes to an application                                      | jot down interview thoughts or tech stack requirements                      |
+| v2.0    | user     | view all deadlines sorted by date                                | see which deadline is approaching next                                      |
+| v2.0    | user     | search for an application by company name                        | find specific details quickly without scrolling through the entire list     |
 
 ## Non-Functional Requirements
 
