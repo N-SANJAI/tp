@@ -92,4 +92,26 @@ public class ApplicationList {
     public List<Application> getApplications() {
         return Collections.unmodifiableList(applications);
     }
+
+    /**
+     * Checks if the list already contains an application equivalent to the given one.
+     *
+     * @param toCheck The application to check for duplicates.
+     * @return True if a duplicate exists, false otherwise.
+     */
+    public boolean hasApplication(Application toCheck) {
+        for (int i = 0; i < applications.size(); i++) {
+            if (applications.get(i).isSameApplication(toCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Removes all application entries from the tracker.
+     */
+    public void clear() {
+        applications.clear();
+    }
 }

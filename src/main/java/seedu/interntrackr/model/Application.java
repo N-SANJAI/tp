@@ -180,4 +180,20 @@ public class Application {
         }
         return company + " | " + role + " | " + status + " | " + deadline.toStorageString();
     }
+
+    /**
+     * Checks if this application is the same as another application.
+     * Two applications are considered the same if they have the same company and role (case-insensitive).
+     *
+     * @param other The other application to compare with.
+     * @return True if they represent the same internship, false otherwise.
+     */
+    public boolean isSameApplication(Application other) {
+        if (other == this) {
+            return true;
+        }
+        return other != null
+                && other.getCompany().equalsIgnoreCase(this.getCompany())
+                && other.getRole().equalsIgnoreCase(this.getRole());
+    }
 }

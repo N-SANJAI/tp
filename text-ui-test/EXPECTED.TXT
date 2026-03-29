@@ -13,14 +13,68 @@ Now you have 2 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Amazon | Role: Backend Engineer | Status: Applied | Deadline: null
+  Company: Apple | Role: Product Manager | Status: Applied | Deadline: null
 Now you have 3 application(s) in the list.
+____________________________________________________________
+____________________________________________________________
+You have already tracked an application for Software Engineer at Google.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
 1. Company: Google | Role: Software Engineer | Status: Applied | Deadline: null
 2. Company: Meta | Role: Data Scientist | Status: Applied | Deadline: null
-3. Company: Amazon | Role: Backend Engineer | Status: Applied | Deadline: null
+3. Company: Apple | Role: Product Manager | Status: Applied | Deadline: null
+____________________________________________________________
+____________________________________________________________
+Here are the matching applications in your list:
+1. Company: Google | Role: Software Engineer | Status: Applied | Deadline: null
+____________________________________________________________
+____________________________________________________________
+Here are the matching applications in your list:
+3. Company: Apple | Role: Product Manager | Status: Applied | Deadline: null
+____________________________________________________________
+____________________________________________________________
+No matching applications found.
+____________________________________________________________
+____________________________________________________________
+Status updated! Google is now marked as [Interview]
+____________________________________________________________
+____________________________________________________________
+Error: Invalid status assigned. Please use one of the following:
+Applied
+Pending
+Interview
+Offered
+Rejected
+Accepted
+____________________________________________________________
+____________________________________________________________
+Error: Invalid application index. Please provide a number between 1 and 3
+____________________________________________________________
+____________________________________________________________
+Here are the applications with status: Interview
+1. Company: Google | Role: Software Engineer | Status: Interview | Deadline: null
+____________________________________________________________
+____________________________________________________________
+Error: Invalid status assigned. Please use one of the following:
+Applied
+Pending
+Interview
+Offered
+Rejected
+Accepted
+____________________________________________________________
+____________________________________________________________
+Filter cleared. Showing all applications:
+1. Company: Google | Role: Software Engineer | Status: Interview | Deadline: null
+2. Company: Meta | Role: Data Scientist | Status: Applied | Deadline: null
+3. Company: Apple | Role: Product Manager | Status: Applied | Deadline: null
+____________________________________________________________
+____________________________________________________________
+Error: Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY [n/NOTES]
+____________________________________________________________
+____________________________________________________________
+Error: Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY [n/NOTES]
 ____________________________________________________________
 ____________________________________________________________
 Overview:
@@ -28,31 +82,28 @@ You are currently tracking 3 applications.
 Keep up the momentum!
 ____________________________________________________________
 ____________________________________________________________
-Status updated! Google is now marked as [Applied]
-____________________________________________________________
-____________________________________________________________
-Status updated! Meta is now marked as [Interview]
-____________________________________________________________
-____________________________________________________________
-Here are the applications with status: Applied
-1. Company: Google | Role: Software Engineer | Status: Applied | Deadline: null
-3. Company: Amazon | Role: Backend Engineer | Status: Applied | Deadline: null
-____________________________________________________________
-____________________________________________________________
-Filter cleared. Showing all applications:
-1. Company: Google | Role: Software Engineer | Status: Applied | Deadline: null
-2. Company: Meta | Role: Data Scientist | Status: Interview | Deadline: null
-3. Company: Amazon | Role: Backend Engineer | Status: Applied | Deadline: null
-____________________________________________________________
-____________________________________________________________
 Noted. I've removed this application:
-  Company: Meta | Role: Data Scientist | Status: Interview | Deadline: null
+  Company: Meta | Role: Data Scientist | Status: Applied | Deadline: null
 Now you have 2 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
+Error: Invalid application index. Please provide a valid number.
+____________________________________________________________
+____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Applied | Deadline: null
-2. Company: Amazon | Role: Backend Engineer | Status: Applied | Deadline: null
+1. Company: Google | Role: Software Engineer | Status: Interview | Deadline: null
+2. Company: Apple | Role: Product Manager | Status: Applied | Deadline: null
+____________________________________________________________
+____________________________________________________________
+Are you sure you want to clear all data? Type 'yes' to confirm:
+Clear command cancelled.
+____________________________________________________________
+____________________________________________________________
+Are you sure you want to clear all data? Type 'yes' to confirm:
+All data has been cleared.
+____________________________________________________________
+____________________________________________________________
+No applications found. Start adding some!
 ____________________________________________________________
 ____________________________________________________________
 Bye! Good luck with your internship hunt.

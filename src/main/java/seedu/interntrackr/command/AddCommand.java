@@ -6,6 +6,7 @@ import seedu.interntrackr.model.ApplicationList;
 import seedu.interntrackr.storage.Storage;
 import seedu.interntrackr.ui.Ui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,10 +26,10 @@ public class AddCommand extends Command {
      * @throws IllegalArgumentException If company or role is null or blank.
      */
     public AddCommand(String company, String role) {
-        if (company == null || company.isBlank()) {
+        if (company == null || company.trim().isEmpty()) {
             throw new IllegalArgumentException("Company name cannot be null or blank.");
         }
-        if (role == null || role.isBlank()) {
+        if (role == null || role.trim().isEmpty()) {
             throw new IllegalArgumentException("Role cannot be null or blank.");
         }
 
@@ -54,6 +55,14 @@ public class AddCommand extends Command {
         logger.info("Executing AddCommand: " + company + " | " + role);
 
         Application newApp = new Application(company, role);
+
+        if (applications.hasApplication(newApp)) {
+            logger.log(Level.INFO, "Duplicate application detected: " + company + " (" + role + ")");
+            ui.showMessage("You have already tracked an application for "
+                    + role + " at " + company + ".");
+            return;
+        }
+
         applications.addApplication(newApp);
 
         assert applications.getSize() > 0 : "List size must be positive after adding";
