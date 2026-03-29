@@ -1,12 +1,26 @@
 add c/Google r/Software Engineer
 add c/Meta r/Data Scientist
-add c/Amazon r/Backend Engineer
+add c/Apple r/Product Manager
+add c/Google r/Software Engineer
 list
-overview
-status 1 s/applied
-status 2 s/interview
-filter s/applied
+find Google
+find Product
+find NonExistent
+status 1 s/interview
+status 2 s/Ghosted
+status 99 s/Offered
+filter s/interview
+filter s/Ghosted
 filter clear
+deadline 1 type/Technical Interview d/2026-05-01
+deadline 99 type/Final d/2026-06-01
+overview
 delete 2
+delete 99
+list
+clear
+no
+clear
+yes
 list
 exit
