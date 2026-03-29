@@ -6,6 +6,7 @@ import seedu.interntrackr.model.ApplicationList;
 import seedu.interntrackr.storage.Storage;
 import seedu.interntrackr.ui.Ui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,6 +55,14 @@ public class AddCommand extends Command {
         logger.info("Executing AddCommand: " + company + " | " + role);
 
         Application newApp = new Application(company, role);
+
+        if (applications.hasApplication(newApp)) {
+            logger.log(Level.INFO, "Duplicate application detected: " + company + " (" + role + ")");
+            ui.showMessage("You have already tracked an application for "
+                    + role + " at " + company + ".");
+            return;
+        }
+
         applications.addApplication(newApp);
 
         assert applications.getSize() > 0 : "List size must be positive after adding";
