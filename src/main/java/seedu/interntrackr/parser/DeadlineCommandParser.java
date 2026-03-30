@@ -1,4 +1,3 @@
-//@@author eugenia-cnl-lee
 package seedu.interntrackr.parser;
 
 import java.time.LocalDate;
@@ -6,11 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.logging.Logger;
 
+import seedu.interntrackr.command.Command;
 import seedu.interntrackr.command.DeadlineAddCommand;
+import seedu.interntrackr.command.DeadlineListCommand;
 import seedu.interntrackr.exception.InternTrackrException;
 
 /**
- * Parses user input arguments for the deadline command.
+ * Parses user input arguments for deadline subcommands.
  */
 public class DeadlineCommandParser {
     private static final Logger logger = Logger.getLogger(DeadlineCommandParser.class.getName());
@@ -19,34 +20,45 @@ public class DeadlineCommandParser {
     private static final String PREFIX_DATE = " d/";
     private static final String PREFIX_NOTES = " n/";
     private static final String DATE_FORMAT = "dd-MM-yyyy";
-    private static final String DEADLINE_SUBCOMMAND = "add ";
 
     /**
-     * Parses the given arguments and returns a DeadlineAddCommand.
+     * Parses the given arguments and returns the corresponding deadline command.
      *
      * @param arguments The argument string following the "deadline" keyword.
-     * @return A new DeadlineAddCommand with the parsed index, type, and due date.
-     * @throws InternTrackrException If the format is invalid, the index is non-numeric,
-     *     or the date format is incorrect.
+     * @return The parsed deadline command.
+     * @throws InternTrackrException If the format is invalid.
      */
-    public static DeadlineAddCommand parse(String arguments) throws InternTrackrException {
-        if (!arguments.startsWith(DEADLINE_SUBCOMMAND)) {
-            logger.warning("Deadline command missing 'add' subcommand.");
+    public static Command parse(String arguments) throws InternTrackrException {
+        if (arguments == null || arguments.isBlank()) {
             throw new InternTrackrException(
-                    "Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY [n/NOTES]");
+                    "Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY or deadline list INDEX");
         }
 
-        String subArgs = arguments.substring(DEADLINE_SUBCOMMAND.length()).trim();
+        String[] parts = arguments.trim().split(" ", 2);
+        String subcommandWord = parts[0].toLowerCase();
+        String subcommandArgs = parts.length > 1 ? parts[1].trim() : "";
 
-        if (!subArgs.contains(PREFIX_TYPE) || !subArgs.contains(PREFIX_DATE)) {
+        switch (subcommandWord) {
+        case "add":
+            return parseAddCommand(subcommandArgs);
+        case "list":
+            return parseListCommand(subcommandArgs);
+        default:
+            throw new InternTrackrException(
+                    "Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY or deadline list INDEX");
+        }
+    }
+
+    private static DeadlineAddCommand parseAddCommand(String arguments) throws InternTrackrException {
+        if (!arguments.contains(PREFIX_TYPE) || !arguments.contains(PREFIX_DATE)) {
             logger.warning("Deadline add command missing t/ or d/ parameter.");
             throw new InternTrackrException(
                     "Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY [n/NOTES]");
         }
 
         try {
-            int typeIndex = subArgs.indexOf(PREFIX_TYPE);
-            int dateIndex = subArgs.indexOf(PREFIX_DATE);
+            int typeIndex = arguments.indexOf(PREFIX_TYPE);
+            int dateIndex = arguments.indexOf(PREFIX_DATE);
 
             if (typeIndex == -1 || dateIndex == -1 || typeIndex > dateIndex) {
                 logger.warning("Deadline add command has incorrect parameter ordering.");
@@ -54,10 +66,10 @@ public class DeadlineCommandParser {
                         "Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY");
             }
 
-            int index = Integer.parseInt(subArgs.substring(0, typeIndex).trim());
-            String deadlineType = subArgs.substring(
+            int index = Integer.parseInt(arguments.substring(0, typeIndex).trim());
+            String deadlineType = arguments.substring(
                     typeIndex + PREFIX_TYPE.length(), dateIndex).trim().replace("\"", "");
-            String dueDateStr = extractDueDateStr(subArgs, dateIndex, deadlineType);
+            String dueDateStr = extractDueDateStr(arguments, dateIndex, deadlineType);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
             LocalDate dueDate = LocalDate.parse(dueDateStr, formatter);
@@ -74,20 +86,23 @@ public class DeadlineCommandParser {
         }
     }
 
-    /**
-     * Extracts and returns the due date string from the deadline subcommand arguments.
-     *
-     * @param subArgs The full argument string for the deadline subcommand.
-     * @param dateIndex The index of the d/ prefix within subArgs.
-     * @param deadlineType The already-parsed deadline type, used for empty validation.
-     * @return The trimmed due date string.
-     * @throws InternTrackrException If the deadline type or due date string is empty.
-     */
+    private static DeadlineListCommand parseListCommand(String arguments) throws InternTrackrException {
+        if (arguments.isBlank()) {
+            throw new InternTrackrException("Invalid format. Usage: deadline list INDEX");
+        }
+
+        try {
+            int index = Integer.parseInt(arguments.trim());
+            logger.fine("Parsed: DeadlineListCommand index=" + index);
+            return new DeadlineListCommand(index);
+        } catch (NumberFormatException e) {
+            logger.warning("Deadline list index is not a number.");
+            throw new InternTrackrException("The application index must be a number.");
+        }
+    }
+
     private static String extractDueDateStr(String subArgs, int dateIndex, String deadlineType)
             throws InternTrackrException {
-        assert subArgs != null : "subArgs must not be null";
-        assert dateIndex >= 0 : "dateIndex must be non-negative";
-
         String dueDateStr = subArgs.substring(dateIndex + PREFIX_DATE.length()).trim().replace("\"", "");
 
         int notesIndex = dueDateStr.indexOf(PREFIX_NOTES);
