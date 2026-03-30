@@ -69,10 +69,10 @@ public class DeadlineAddCommand extends Command {
         // Creates a new Deadline instance
         Deadline newDeadline = new Deadline(deadlineType, dueDate);
 
-        // Set deadline for the specified application
+        // Add deadline to the specified application's deadline list
         Application app = applications.getApplication(index);
-        app.setDeadlines(newDeadline);
-        assert app.getDeadlines() != null : "Deadline should have been set";
+        app.getDeadlines().addDeadline(newDeadline);
+        assert app.getDeadlines() != null : "Deadline list should not be null";
 
         // Show UI message
         ui.showMessage("Deadline updated! " + app.getCompany() + "'s " + app.getRole()
