@@ -65,7 +65,7 @@ public class DeadlineList {
     @Override
     public String toString() {
         if (deadlines.isEmpty()) {
-            return "[]";
+            return "null";
         }
         return deadlines.toString();
     }
