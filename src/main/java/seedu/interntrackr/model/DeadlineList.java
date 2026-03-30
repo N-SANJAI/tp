@@ -5,8 +5,6 @@ import java.util.logging.Logger;
 import java.util.Collections;
 import java.util.List;
 
-import seedu.interntrackr.exception.InternTrackrException;
-
 public class DeadlineList {
 
     private static final Logger logger = Logger.getLogger(DeadlineList.class.getName());
