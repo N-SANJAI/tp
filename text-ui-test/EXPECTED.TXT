@@ -3,17 +3,17 @@ Welcome to InternTrackr! Ready to hunt for some internships?
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Google | Role: Software Engineer | Status: Applied | Deadlines: null
+  Company: Google | Role: Software Engineer | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 Now you have 1 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Meta | Role: Data Scientist | Status: Applied | Deadlines: null
+  Company: Meta | Role: Data Scientist | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 Now you have 2 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Apple | Role: Product Manager | Status: Applied | Deadlines: null
+  Company: Apple | Role: Product Manager | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 Now you have 3 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -21,17 +21,17 @@ You have already tracked an application for Software Engineer at Google.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Applied | Deadlines: null
-2. Company: Meta | Role: Data Scientist | Status: Applied | Deadlines: null
-3. Company: Apple | Role: Product Manager | Status: Applied | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
+2. Company: Meta | Role: Data Scientist | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
+3. Company: Apple | Role: Product Manager | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching applications in your list:
-1. Company: Google | Role: Software Engineer | Status: Applied | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching applications in your list:
-3. Company: Apple | Role: Product Manager | Status: Applied | Deadlines: null
+3. Company: Apple | Role: Product Manager | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 No matching applications found.
@@ -53,7 +53,7 @@ Error: Invalid application index. Please provide a number between 1 and 3
 ____________________________________________________________
 ____________________________________________________________
 Here are the applications with status: Interview
-1. Company: Google | Role: Software Engineer | Status: Interview | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Interview | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 Error: Invalid status assigned. Please use one of the following:
@@ -66,9 +66,9 @@ Accepted
 ____________________________________________________________
 ____________________________________________________________
 Filter cleared. Showing all applications:
-1. Company: Google | Role: Software Engineer | Status: Interview | Deadlines: null
-2. Company: Meta | Role: Data Scientist | Status: Applied | Deadlines: null
-3. Company: Apple | Role: Product Manager | Status: Applied | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Interview | Contact Name: - | Contact Email: - | Deadlines: null
+2. Company: Meta | Role: Data Scientist | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
+3. Company: Apple | Role: Product Manager | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 Error: Invalid format. Usage: deadline add INDEX t/TYPE d/DD-MM-YYYY [n/NOTES]
@@ -83,7 +83,7 @@ Keep up the momentum!
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this application:
-  Company: Meta | Role: Data Scientist | Status: Applied | Deadlines: null
+  Company: Meta | Role: Data Scientist | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 Now you have 2 application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -91,8 +91,8 @@ Error: Invalid application index. Please provide a valid number.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Interview | Deadlines: null
-2. Company: Apple | Role: Product Manager | Status: Applied | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Interview | Contact Name: - | Contact Email: - | Deadlines: null
+2. Company: Apple | Role: Product Manager | Status: Applied | Contact Name: - | Contact Email: - | Deadlines: null
 ____________________________________________________________
 ____________________________________________________________
 Are you sure you want to clear all data? Type 'yes' to confirm:

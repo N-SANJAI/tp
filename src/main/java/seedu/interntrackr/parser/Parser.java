@@ -47,6 +47,8 @@ public class Parser {
             return FilterCommandParser.parse(arguments);
         case "deadline":
             return DeadlineCommandParser.parse(arguments);
+        case "contact":
+            return ContactCommandParser.parse(arguments);
         case "find":
             return new FindCommandParser().parse(arguments);
         case "clear":

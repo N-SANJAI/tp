@@ -57,13 +57,24 @@ public class Storage {
                 if (line.isEmpty()) {
                     continue;
                 }
-                String[] parts = line.split(" \\| ");
-                if (parts.length < 3) {
+
+                String[] parts = line.split(" \\| ", -1);
+                if (parts.length < 5) {
                     logger.warning("Corrupted data at line " + lineNumber + ": " + line);
                     throw new InternTrackrException("Corrupted data at line " + lineNumber + ": " + line);
                 }
 
+                if ((parts.length - 5) % 3 != 0) {
+                    logger.warning("Corrupted data at line " + lineNumber + ": " + line);
+                    throw new InternTrackrException("Corrupted data at line " + lineNumber + ": " + line);
+                }
+
+                String company = parts[0].trim();
+                String role = parts[1].trim();
                 String status = parts[2].trim();
+                String contactName = parts[3].trim();
+                String contactEmail = parts[4].trim();
+
                 if (!Application.isValidStatus(status)) {
                     logger.warning("Invalid status at line " + lineNumber + ": " + status);
                     throw new InternTrackrException("Corrupted data at line " + lineNumber
@@ -72,26 +83,29 @@ public class Storage {
 
                 status = Application.getNormalizedStatus(status);
 
-                // Load deadlines if present (parts[3]=type, parts[4]=date, parts[5]=isDone)
-                if (parts.length == 6) {
+                DeadlineList deadlineList = new DeadlineList();
+
+                if (parts.length > 5) {
                     try {
-                        String deadlineType = parts[3].trim();
-                        LocalDate dueDate = LocalDate.parse(parts[4].trim());
-                        boolean isDone = Boolean.parseBoolean(parts[5].trim());
-                        Deadline deadline = new Deadline(deadlineType, dueDate, isDone);
-                        ArrayList<Deadline> deadlines = new ArrayList<>();
-                        deadlines.add(deadline);
-                        DeadlineList deadlineList = new DeadlineList(deadlines);
-                        applications.add(new Application(parts[0], parts[1], status, deadlineList));
+                        for (int i = 5; i < parts.length; i += 3) {
+                            String deadlineType = parts[i].trim();
+                            LocalDate dueDate = LocalDate.parse(parts[i + 1].trim());
+                            boolean isDone = Boolean.parseBoolean(parts[i + 2].trim());
+
+                            Deadline deadline = new Deadline(deadlineType, dueDate, isDone);
+                            deadlineList.addDeadline(deadline);
+                        }
+
+                        applications.add(new Application(company, role, status,
+                                contactName, contactEmail, deadlineList));
                         logger.fine("Loaded application with deadline at line " + lineNumber);
                     } catch (DateTimeParseException e) {
-                        logger.warning("Invalid deadline date at line " + lineNumber + ": " + parts[4]);
+                        logger.warning("Invalid deadline date at line " + lineNumber + ": " + line);
                         throw new InternTrackrException("Corrupted deadline date at line "
-                                + lineNumber + ": " + parts[4]);
+                                + lineNumber + ": " + line);
                     }
                 } else {
-                    // No deadline — load as normal application
-                    applications.add(new Application(parts[0], parts[1], status));
+                    applications.add(new Application(company, role, status, contactName, contactEmail));
                     logger.fine("Loaded application without deadline at line " + lineNumber);
                 }
             }

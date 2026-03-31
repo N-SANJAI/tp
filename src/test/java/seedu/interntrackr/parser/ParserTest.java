@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import seedu.interntrackr.command.ExitCommand;
 import seedu.interntrackr.command.ListCommand;
 import seedu.interntrackr.command.OverviewCommand;
+import seedu.interntrackr.command.ContactCommand;
 import seedu.interntrackr.exception.InternTrackrException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,5 +35,10 @@ public class ParserTest {
     @Test
     public void parse_blankInput_throwsInternTrackrException() {
         assertThrows(InternTrackrException.class, () -> Parser.parse("   "));
+    }
+
+    @Test
+    void parse_contactCommand_success() throws Exception {
+        assertTrue(Parser.parse("contact 1 c/Jane Tan e/jane@example.com") instanceof ContactCommand);
     }
 }

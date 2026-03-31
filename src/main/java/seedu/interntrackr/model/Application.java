@@ -17,6 +17,8 @@ public class Application {
     private String role;
     private String status;
     private DeadlineList deadlines;
+    private String contactName;
+    private String contactEmail;
 
     /**
      * Constructs an Application with the given company and role.
@@ -30,6 +32,8 @@ public class Application {
         this.company = company;
         this.role = role;
         this.status = "Applied";
+        this.contactName = null;
+        this.contactEmail = null;
         this.deadlines = new DeadlineList();
         logger.fine("Created application: " + company + " | " + role);
     }
@@ -48,27 +52,89 @@ public class Application {
         this.company = company;
         this.role = role;
         this.status = status;
+        this.contactName = null;
+        this.contactEmail = null;
         this.deadlines = new DeadlineList();
         logger.fine("Created application: " + company + " | " + role + " | " + status);
     }
 
     /**
-     * Constructs an Application with the given company, role, status, and deadlines.
+     * Constructs an Application with the given company, role, status, and contact name.
      *
-     * @param company  The name of the company.
-     * @param role     The role applied for.
-     * @param status   The current application status.
-     * @param deadlines The deadlines of this application.
+     * @param company      The name of the company.
+     * @param role         The role applied for.
+     * @param status       The current application status.
+     * @param contactName  The contact name of this application.
      */
-    public Application(String company, String role, String status, DeadlineList deadlines) {
+    public Application(String company, String role, String status, String contactName) {
         assert company != null && !company.isEmpty() : "Company name cannot be null or empty";
         assert role != null && !role.isEmpty() : "Role cannot be null or empty";
         assert status != null && !status.isEmpty() : "Status cannot be null or empty";
         this.company = company;
         this.role = role;
         this.status = status;
+        this.contactName = contactName;
+        this.contactEmail = null;
+        this.deadlines = new DeadlineList();
+        logger.fine("Created application with contact name: " + company +
+                " | " + role +
+                " | " + status +
+                " | " + contactName);
+    }
+
+    /**
+     * Constructs an Application with the given company, role, status, contact name, and contact email.
+     *
+     * @param company      The name of the company.
+     * @param role         The role applied for.
+     * @param status       The current application status.
+     * @param contactName  The contact name of this application.
+     * @param contactEmail The contact email for this application.
+     */
+    public Application(String company, String role, String status, String contactName, String contactEmail) {
+        assert company != null && !company.isEmpty() : "Company name cannot be null or empty";
+        assert role != null && !role.isEmpty() : "Role cannot be null or empty";
+        assert status != null && !status.isEmpty() : "Status cannot be null or empty";
+        this.company = company;
+        this.role = role;
+        this.status = status;
+        this.contactName = contactName;
+        this.contactEmail = contactEmail;
+        this.deadlines = new DeadlineList();
+        logger.fine("Created application with contact name and contact email: " + company +
+                " | " + role +
+                " | " + status +
+                " | " + contactName +
+                " | " + contactEmail);
+    }
+
+    /**
+     * Constructs an Application with the given company, role, status, contact name, contact email, and deadlines.
+     *
+     * @param company      The name of the company.
+     * @param role         The role applied for.
+     * @param status       The current application status.
+     * @param contactName  The contact name of this application.
+     * @param contactEmail The contact email for this application.
+     * @param deadlines    The deadlines of this application.
+     */
+    public Application(String company, String role, String status,
+                       String contactName, String contactEmail, DeadlineList deadlines) {
+        assert company != null && !company.isEmpty() : "Company name cannot be null or empty";
+        assert role != null && !role.isEmpty() : "Role cannot be null or empty";
+        assert status != null && !status.isEmpty() : "Status cannot be null or empty";
+        this.company = company;
+        this.role = role;
+        this.status = status;
+        this.contactName = contactName;
+        this.contactEmail = contactEmail;
         this.deadlines = deadlines;
-        logger.fine("Created application with deadlines: " + company + " | " + role);
+        logger.fine("Created application with deadlines: " + company +
+                " | " + role +
+                " | " + status +
+                " | " + contactName +
+                " | " + contactEmail +
+                " | " + deadlines);
     }
 
     /**
@@ -142,6 +208,35 @@ public class Application {
     }
 
     /**
+     * Returns the contact name of this application.
+     *
+     * @return The contact name.
+     */
+    public String getContactName() {
+        return contactName;
+    }
+
+    /**
+     * Returns the contact email of this application.
+     *
+     * @return The contact email.
+     */
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    /**
+     * Sets the contact name and contact email of this application.
+     *
+     * @param contactName  The contact name.
+     * @param contactEmail The contact email.
+     */
+    public void setContactDetails(String contactName, String contactEmail) {
+        this.contactName = contactName;
+        this.contactEmail = contactEmail;
+    }
+
+    /**
      * Returns the deadlines of this application.
      *
      * @return The deadlines.
@@ -166,7 +261,14 @@ public class Application {
      */
     @Override
     public String toString() {
-        return "Company: " + company + " | Role: " + role + " | Status: " + status + " | Deadlines: " + deadlines;
+        String contactName = (this.contactName == null) ? "-" : this.contactName;
+        String contactEmail = (this.contactEmail == null) ? "-" : this.contactEmail;
+        return "Company: " + company +
+                " | Role: " + role +
+                " | Status: " + status +
+                " | Contact Name: " + contactName +
+                " | Contact Email: " + contactEmail +
+                " | Deadlines: " + deadlines;
     }
 
     /**
@@ -175,11 +277,20 @@ public class Application {
      * @return A storage-formatted string.
      */
     public String toStorageString() {
-        if (deadlines == null || deadlines.getSize() == 0) {
-            return company + " | " + role + " | " + status;
+        StringBuilder sb = new StringBuilder();
+        sb.append(company).append(" | ")
+                .append(role).append(" | ")
+                .append(status).append(" | ")
+                .append(contactName == null ? "-" : contactName).append(" | ")
+                .append(contactEmail == null ? "-" : contactEmail);
+
+        if (deadlines != null && deadlines.getSize() > 0) {
+            for (Deadline deadline : deadlines.getDeadlines()) {
+                sb.append(" | ").append(deadline.toStorageString());
+            }
         }
-        // Temporary compatibility (supports only one deadline); TODO update storage for multiple deadlines
-        return company + " | " + role + " | " + status + " | " + deadlines.getDeadlines().get(0).toStorageString();
+
+        return sb.toString();
     }
 
     /**

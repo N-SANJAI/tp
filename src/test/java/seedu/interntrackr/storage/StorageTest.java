@@ -3,6 +3,10 @@ package seedu.interntrackr.storage;
 import org.junit.jupiter.api.Test;
 import seedu.interntrackr.exception.InternTrackrException;
 import seedu.interntrackr.model.Application;
+import seedu.interntrackr.model.Deadline;
+import seedu.interntrackr.model.DeadlineList;
+
+import java.time.LocalDate;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,18 +31,63 @@ class StorageTest {
         Storage storage = new Storage(getTempFilePath());
 
         ArrayList<Application> toSave = new ArrayList<>();
-        toSave.add(new Application("Shopee", "Backend Intern", "Applied"));
-        toSave.add(new Application("Google", "SWE Intern", "Interview"));
+        toSave.add(new Application("Shopee", "Backend Intern", "Applied",
+                "Jane Tan", "jane@shopee.com"));
+        toSave.add(new Application("Google", "SWE Intern", "Interview",
+                "Alex Lim", "alex@google.com"));
 
         storage.save(toSave);
         ArrayList<Application> loaded = storage.load();
 
         assertEquals(2, loaded.size());
+
         assertEquals("Shopee", loaded.get(0).getCompany());
         assertEquals("Backend Intern", loaded.get(0).getRole());
         assertEquals("Applied", loaded.get(0).getStatus());
+        assertEquals("Jane Tan", loaded.get(0).getContactName());
+        assertEquals("jane@shopee.com", loaded.get(0).getContactEmail());
+
         assertEquals("Google", loaded.get(1).getCompany());
+        assertEquals("SWE Intern", loaded.get(1).getRole());
         assertEquals("Interview", loaded.get(1).getStatus());
+        assertEquals("Alex Lim", loaded.get(1).getContactName());
+        assertEquals("alex@google.com", loaded.get(1).getContactEmail());
+    }
+
+    @Test
+    void saveAndLoad_applicationWithDeadlines_success() throws InternTrackrException {
+        Storage storage = new Storage(getTempFilePath());
+
+        ArrayList<Application> toSave = new ArrayList<>();
+
+        DeadlineList deadlines = new DeadlineList();
+        deadlines.addDeadline(new Deadline("OA", LocalDate.of(2026, 4, 1), false));
+        deadlines.addDeadline(new Deadline("Interview", LocalDate.of(2026, 4, 10), true));
+
+        Application app = new Application("Meta", "Data Intern", "Applied",
+                "Chris Tan", "chris@meta.com", deadlines);
+        toSave.add(app);
+
+        storage.save(toSave);
+        ArrayList<Application> loaded = storage.load();
+
+        assertEquals(1, loaded.size());
+
+        Application loadedApp = loaded.get(0);
+        assertEquals("Meta", loadedApp.getCompany());
+        assertEquals("Data Intern", loadedApp.getRole());
+        assertEquals("Applied", loadedApp.getStatus());
+        assertEquals("Chris Tan", loadedApp.getContactName());
+        assertEquals("chris@meta.com", loadedApp.getContactEmail());
+
+        assertEquals(2, loadedApp.getDeadlines().getSize());
+        assertEquals("OA", loadedApp.getDeadlines().getDeadlines().get(0).getDeadlineType());
+        assertEquals(LocalDate.of(2026, 4, 1), loadedApp.getDeadlines().getDeadlines().get(0).getDueDate());
+        assertEquals(false, loadedApp.getDeadlines().getDeadlines().get(0).getIsDone());
+
+        assertEquals("Interview", loadedApp.getDeadlines().getDeadlines().get(1).getDeadlineType());
+        assertEquals(LocalDate.of(2026, 4, 10), loadedApp.getDeadlines().getDeadlines().get(1).getDueDate());
+        assertEquals(true, loadedApp.getDeadlines().getDeadlines().get(1).getIsDone());
     }
 
     @Test
@@ -79,6 +128,18 @@ class StorageTest {
         }
 
         assertThrows(InternTrackrException.class, () -> storage.load());
+    }
+
+    @Test
+    void load_invalidDeadlineDate_throwsInternTrackrException() throws Exception {
+        String path = System.getProperty("java.io.tmpdir") + "/invalid_deadline_date_test.txt";
+        Storage storage = new Storage(path);
+
+        try (java.io.FileWriter fw = new java.io.FileWriter(path)) {
+            fw.write("Shopee | Backend Intern | Applied | Jane Tan | jane@shopee.com | OA | not-a-date | false\n");
+        }
+
+        assertThrows(InternTrackrException.class, storage::load);
     }
 
     @Test
