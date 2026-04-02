@@ -46,13 +46,13 @@ public class OfferCommand extends Command {
 
         logger.log(Level.INFO, "Executing OfferCommand for index " + index + " with salary: " + salary);
 
-        if (index < 1 || index > applications.getSize()) {
+        if (index < 1 || index > applications.countActive()) {
             logger.log(Level.WARNING, "Offer update failed: index " + index + " out of bounds.");
             throw new InternTrackrException("Invalid application index. Please provide a number between 1 and "
-                    + applications.getSize());
+                    + applications.countActive());
         }
 
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
         app.setSalary(salary);
         String previousStatus = app.getStatus();
 

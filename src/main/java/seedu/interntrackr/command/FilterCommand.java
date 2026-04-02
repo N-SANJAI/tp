@@ -1,3 +1,4 @@
+//@@author EmDani3l
 package seedu.interntrackr.command;
 
 import seedu.interntrackr.model.Application;
@@ -78,12 +79,17 @@ public class FilterCommand extends Command {
         String searchStatus = Application.getNormalizedStatus(this.status);
         ui.showMessage("Here are the applications with status: " + searchStatus);
         int matchCount = 0;
+        int displayIndex = 1;
 
         for (int i = 1; i <= applications.getSize(); i++) {
             Application app = applications.getApplication(i);
-            if (app != null && app.getStatus().equals(searchStatus)) {
-                ui.showMessage(i + ". " + app.toString());
-                matchCount++;
+
+            if (app != null && !app.isArchived()) {
+                if (app.getStatus().equals(searchStatus)) {
+                    ui.showMessage(displayIndex + ". " + app.toString());
+                    matchCount++;
+                }
+                displayIndex++;
             }
         }
 
@@ -100,10 +106,12 @@ public class FilterCommand extends Command {
      */
     private void handleClearFilter(ApplicationList applications, Ui ui) {
         ui.showMessage("Filter cleared. Showing all applications:");
+        int displayIndex = 1;
         for (int i = 1; i <= applications.getSize(); i++) {
             Application app = applications.getApplication(i);
-            if (app != null) {
-                ui.showMessage(i + ". " + app.toString());
+            if (app != null && !app.isArchived()) {
+                ui.showMessage(displayIndex + ". " + app.toString());
+                displayIndex++;
             }
         }
     }

@@ -46,7 +46,7 @@ public class NoteCommand extends Command {
 
         logger.info("Executing NoteCommand for index: " + index);
 
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
         app.setNote(note);
 
         storage.save(applications.getApplications());

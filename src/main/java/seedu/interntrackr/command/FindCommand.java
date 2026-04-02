@@ -1,3 +1,4 @@
+//@@author EmDani3l
 package seedu.interntrackr.command;
 
 import seedu.interntrackr.exception.InternTrackrException;
@@ -38,14 +39,19 @@ public class FindCommand extends Command {
         ArrayList<Application> matchingApps = new ArrayList<>();
         ArrayList<Integer> matchingIndices = new ArrayList<>();
 
+        int displayIndex = 1;
         for (int i = 0; i < applications.getSize(); i++) {
             Application app = applications.getApplication(i + 1);
-            boolean isMatch = app.getCompany().toLowerCase().contains(keyword)
-                    || app.getRole().toLowerCase().contains(keyword);
 
-            if (isMatch) {
-                matchingApps.add(app);
-                matchingIndices.add(i + 1);
+            if (!app.isArchived()) {
+                boolean isMatch = app.getCompany().toLowerCase().contains(keyword)
+                        || app.getRole().toLowerCase().contains(keyword);
+
+                if (isMatch) {
+                    matchingApps.add(app);
+                    matchingIndices.add(displayIndex);
+                }
+                displayIndex++;
             }
         }
 

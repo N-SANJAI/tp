@@ -34,11 +34,11 @@ public class DeadlineListCommand extends Command {
         assert applications != null : "ApplicationList cannot be null";
         assert ui != null : "Ui cannot be null";
 
-        if (index < 1 || index > applications.getSize()) {
+        if (index < 1 || index > applications.countActive()) {
             throw new InternTrackrException("Invalid application index.");
         }
 
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
         DeadlineList deadlines = app.getDeadlines();
 
         assert deadlines != null : "DeadlineList cannot be null";

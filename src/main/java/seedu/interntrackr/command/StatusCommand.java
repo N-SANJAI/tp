@@ -46,10 +46,10 @@ public class StatusCommand extends Command {
 
         logger.log(Level.INFO, "Executing StatusCommand for index " + index + " with status: " + status);
 
-        if (index < 1 || index > applications.getSize()) {
+        if (index < 1 || index > applications.countActive()) {
             logger.log(Level.WARNING, "Status update failed: index " + index + " out of bounds.");
             throw new InternTrackrException("Invalid application index. Please provide a number between 1 and "
-                    + applications.getSize());
+                    + applications.countActive());
         }
 
         if (this.status.isEmpty()) {
@@ -69,7 +69,7 @@ public class StatusCommand extends Command {
         }
 
         String normalizedStatus = Application.getNormalizedStatus(this.status);
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
 
         if (app == null) {
             logger.log(Level.SEVERE, "Retrieved null application at valid index " + index);

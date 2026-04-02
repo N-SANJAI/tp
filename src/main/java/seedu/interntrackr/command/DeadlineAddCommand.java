@@ -61,7 +61,7 @@ public class DeadlineAddCommand extends Command {
 
         logger.info("Executing DeadlineAddCommand for application index " + index);
 
-        if (index < 1 || index > applications.getSize()) {
+        if (index < 1 || index > applications.countActive()) {
             logger.warning("Invalid application index: " + index);
             throw new InternTrackrException("Invalid application index.");
         }
@@ -70,7 +70,7 @@ public class DeadlineAddCommand extends Command {
         Deadline newDeadline = new Deadline(deadlineType, dueDate);
 
         // Add deadline to the specified application's deadline list
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
         app.getDeadlines().addDeadline(newDeadline);
         assert app.getDeadlines() != null : "Deadline list should not be null";
 

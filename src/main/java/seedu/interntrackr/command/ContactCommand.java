@@ -50,7 +50,7 @@ public class ContactCommand extends Command {
         logger.log(Level.INFO, "Executing ContactCommand. index: " + index
                 + ", contactName: " + contactName + ", contactEmail: " + contactEmail);
 
-        if (index < 1 || index > applications.getSize()) {
+        if (index < 1 || index > applications.countActive()) {
             logger.log(Level.WARNING, "Invalid application index for contact command: " + index);
             throw new InternTrackrException("Invalid application index.");
         }
@@ -70,7 +70,7 @@ public class ContactCommand extends Command {
             throw new InternTrackrException("Invalid contact email format.");
         }
 
-        Application app = applications.getApplication(index);
+        Application app = applications.getActiveApplication(index);
         assert app != null : "Application should not be null for a valid index";
 
         logger.log(Level.FINE, "Updating contact details for application: "
