@@ -19,8 +19,10 @@ public class Application {
     private DeadlineList deadlines;
     private String contactName;
     private String contactEmail;
-    private Double salary; // null if no salary/offer details are available
+    private Double salary;
     private String note;
+    private boolean isArchived;
+
     /**
      * Constructs an Application with the given company and role.
      *
@@ -38,6 +40,7 @@ public class Application {
         this.salary = null;
         this.deadlines = new DeadlineList();
         this.note = null;
+        this.isArchived = false;
         logger.fine("Created application: " + company + " | " + role);
     }
 
@@ -60,16 +63,17 @@ public class Application {
         this.salary = null;
         this.deadlines = new DeadlineList();
         this.note = null;
+        this.isArchived = false;
         logger.fine("Created application: " + company + " | " + role + " | " + status);
     }
 
     /**
      * Constructs an Application with the given company, role, status, and contact name.
      *
-     * @param company      The name of the company.
-     * @param role         The role applied for.
-     * @param status       The current application status.
-     * @param contactName  The contact name of this application.
+     * @param company     The name of the company.
+     * @param role        The role applied for.
+     * @param status      The current application status.
+     * @param contactName The contact name of this application.
      */
     public Application(String company, String role, String status, String contactName) {
         assert company != null && !company.isEmpty() : "Company name cannot be null or empty";
@@ -83,6 +87,7 @@ public class Application {
         this.salary = null;
         this.deadlines = new DeadlineList();
         this.note = null;
+        this.isArchived = false;
         logger.fine("Created application with contact name: " + company +
                 " | " + role +
                 " | " + status +
@@ -110,6 +115,7 @@ public class Application {
         this.salary = null;
         this.deadlines = new DeadlineList();
         this.note = null;
+        this.isArchived = false;
         logger.fine("Created application with contact name and contact email: " + company +
                 " | " + role +
                 " | " + status +
@@ -118,7 +124,8 @@ public class Application {
     }
 
     /**
-     * Constructs an Application with the given company, role, status, contact name, contact email, and deadlines.
+     * Constructs an Application with the given company, role, status, contact name,
+     * contact email, and deadlines.
      *
      * @param company      The name of the company.
      * @param role         The role applied for.
@@ -140,6 +147,7 @@ public class Application {
         this.salary = null;
         this.deadlines = deadlines;
         this.note = null;
+        this.isArchived = false;
         logger.fine("Created application with deadlines: " + company +
                 " | " + role +
                 " | " + status +
@@ -302,6 +310,25 @@ public class Application {
     }
 
     /**
+     * Returns whether this application is archived.
+     *
+     * @return True if archived, false otherwise.
+     */
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    /**
+     * Sets the archived state of this application.
+     *
+     * @param isArchived True to archive, false to unarchive.
+     */
+    public void setArchived(boolean isArchived) {
+        logger.fine("Setting archived=" + isArchived + " for: " + company + " | " + role);
+        this.isArchived = isArchived;
+    }
+
+    /**
      * Returns a formatted string representation of this application.
      *
      * @return A human-readable string.
@@ -341,6 +368,9 @@ public class Application {
             }
         }
 
+        if (isArchived) {
+            sb.append(" | archived:true");
+        }
         return sb.toString();
     }
 

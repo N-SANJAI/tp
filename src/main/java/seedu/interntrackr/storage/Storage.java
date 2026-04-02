@@ -21,6 +21,17 @@ import java.util.logging.Logger;
 public class Storage {
     private static final Logger logger = Logger.getLogger(Storage.class.getName());
 
+    private static final int MIN_FIELDS = 7;
+    private static final int DEADLINE_FIELDS_PER_ENTRY = 3;
+    private static final int INDEX_COMPANY = 0;
+    private static final int INDEX_ROLE = 1;
+    private static final int INDEX_STATUS = 2;
+    private static final int INDEX_CONTACT_NAME = 3;
+    private static final int INDEX_CONTACT_EMAIL = 4;
+    private static final int INDEX_SALARY = 5;
+    private static final int INDEX_NOTE = 6;
+    private static final int INDEX_DEADLINES_START = 7;
+
     private String filePath;
 
     /**
@@ -84,18 +95,30 @@ public class Storage {
 
         validateMinimumFields(parts, lineNumber, line);
 
-        String company = parts[0].trim();
-        String role = parts[1].trim();
-        String status = parseStatus(parts[2].trim(), lineNumber);
-        String contactName = parts[3].trim();
-        String contactEmail = parts[4].trim();
-        Double salary = parseSalary(parts[5].trim(), lineNumber);
-        String note = parseNote(parts[6].trim());
-        DeadlineList deadlineList = parseDeadlines(parts, lineNumber, line);
+        String company = parts[INDEX_COMPANY].trim();
+        String role = parts[INDEX_ROLE].trim();
+        String status = parseStatus(parts[INDEX_STATUS].trim(), lineNumber);
+        String contactName = parts[INDEX_CONTACT_NAME].trim();
+        String contactEmail = parts[INDEX_CONTACT_EMAIL].trim();
+        Double salary = parseSalary(parts[INDEX_SALARY].trim(), lineNumber);
+        String note = parseNote(parts[INDEX_NOTE].trim());
+
+        // isArchived is only written when true, using the prefix "archived:true"
+        boolean isArchived = false;
+        int deadlineEndIndex = parts.length;
+
+        String lastPart = parts[parts.length - 1].trim();
+        if (lastPart.equalsIgnoreCase("archived:true")) {
+            isArchived = true;
+            deadlineEndIndex = parts.length - 1;
+        }
+
+        DeadlineList deadlineList = parseDeadlines(parts, lineNumber, line, deadlineEndIndex);
 
         Application app = new Application(company, role, status, contactName, contactEmail, deadlineList);
         app.setSalary(salary);
         app.setNote(note);
+        app.setArchived(isArchived);
         return app;
     }
 
@@ -108,7 +131,7 @@ public class Storage {
      * @throws InternTrackrException If there are fewer than 7 fields.
      */
     private void validateMinimumFields(String[] parts, int lineNumber, String line) throws InternTrackrException {
-        if (parts.length < 7) {
+        if (parts.length < MIN_FIELDS) {
             logger.warning("Corrupted data at line " + lineNumber + ": " + line);
             throw new InternTrackrException("Corrupted data at line " + lineNumber + ": " + line
                     + "\n(Note: If you are using an old save file, please delete it and start fresh).");
@@ -164,27 +187,30 @@ public class Storage {
     }
 
     /**
-     * Parses deadline fields from the remaining parts array.
+     * Parses deadline fields from the parts array up to the given end index.
      *
-     * @param parts      The full split line parts.
-     * @param lineNumber The line number for error reporting.
-     * @param line       The original line string.
+     * @param parts          The full split line parts.
+     * @param lineNumber     The line number for error reporting.
+     * @param line           The original line string.
+     * @param deadlineEndIndex The index at which deadline parsing should stop.
      * @return A DeadlineList containing all parsed deadlines.
      * @throws InternTrackrException If the deadline data is malformed.
      */
-    private DeadlineList parseDeadlines(String[] parts, int lineNumber, String line) throws InternTrackrException {
+    private DeadlineList parseDeadlines(String[] parts, int lineNumber,
+                                        String line, int deadlineEndIndex) throws InternTrackrException {
         DeadlineList deadlineList = new DeadlineList();
-        if (parts.length <= 7) {
+        if (deadlineEndIndex <= INDEX_DEADLINES_START) {
             return deadlineList;
         }
 
-        if ((parts.length - 7) % 3 != 0) {
+        int deadlineFieldCount = deadlineEndIndex - INDEX_DEADLINES_START;
+        if (deadlineFieldCount % DEADLINE_FIELDS_PER_ENTRY != 0) {
             logger.warning("Corrupted deadline data at line " + lineNumber + ": " + line);
             throw new InternTrackrException("Corrupted deadline data at line " + lineNumber + ": " + line);
         }
 
         try {
-            for (int i = 7; i < parts.length; i += 3) {
+            for (int i = INDEX_DEADLINES_START; i < deadlineEndIndex; i += DEADLINE_FIELDS_PER_ENTRY) {
                 String deadlineType = parts[i].trim();
                 LocalDate dueDate = LocalDate.parse(parts[i + 1].trim());
                 boolean isDone = Boolean.parseBoolean(parts[i + 2].trim());
