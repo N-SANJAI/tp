@@ -103,12 +103,12 @@ public class Storage {
         Double salary = parseSalary(parts[INDEX_SALARY].trim(), lineNumber);
         String note = parseNote(parts[INDEX_NOTE].trim());
 
-        // isArchived is only written when true, so only check for "true"
+        // isArchived is only written when true, using the prefix "archived:true"
         boolean isArchived = false;
         int deadlineEndIndex = parts.length;
 
         String lastPart = parts[parts.length - 1].trim();
-        if (lastPart.equalsIgnoreCase("true")) {
+        if (lastPart.equalsIgnoreCase("archived:true")) {
             isArchived = true;
             deadlineEndIndex = parts.length - 1;
         }

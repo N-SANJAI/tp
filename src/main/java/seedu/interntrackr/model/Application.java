@@ -369,7 +369,7 @@ public class Application {
         }
 
         if (isArchived) {
-            sb.append(" | ").append(isArchived);
+            sb.append(" | archived:true");
         }
         return sb.toString();
     }
