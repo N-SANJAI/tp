@@ -444,7 +444,216 @@ The diagram below illustrates the confirmation loop and subsequent data clearing
 <!-- @@author -->
 
 ---
+<!-- @@author Aarav -->
 
+### Add, Delete, Parser, Archive and List Archive Feature Implementation
+
+**Author:** Aarav
+
+---
+
+### 1. Add Feature Implementation
+
+The `add` feature allows users to create and track a new internship application by specifying the company and role.
+
+#### 1.1 Implementation Details
+
+The feature is implemented through `AddCommandParser` and `AddCommand`.
+
+**1.1.1 Parsing Logic**
+
+The `AddCommandParser#parse()` method processes the user input as follows:
+
+1. It checks that both the `c/` and `r/` prefixes are present.
+2. It identifies the positions of the company and role prefixes, allowing either order in the user input.
+3. It extracts and trims the company and role values.
+4. It removes accidental quotation marks from the parsed values.
+5. If either field is missing or blank, it throws an `InternTrackrException`.
+
+**1.1.2 Execution Logic**
+
+When `AddCommand#execute()` is called:
+
+1. It constructs a new `Application` using the parsed company and role.
+2. It checks `ApplicationList#hasApplication()` to prevent duplicate entries.
+3. If a duplicate is found, it informs the user and exits without saving.
+4. Otherwise, it adds the new application to the list.
+5. It shows confirmation messages through `Ui`.
+6. It immediately calls `Storage#save()` so the new application is persisted.
+
+![Add Command Sequence Diagram](images/AaravAddCommandSequence.png)
+
+#### 1.2 Design Considerations
+
+**Aspect: Handling duplicate applications**
+
+* **Alternative 1:** Allow duplicate entries.
+  * *Pros:* Simpler logic and more flexibility.
+  * *Cons:* Users may accidentally track the same application multiple times, making the list unreliable.
+* **Alternative 2 (Current Choice):** Reject duplicates before insertion.
+  * *Reasoning:* This keeps the tracker clean and prevents avoidable user mistakes.
+
+---
+
+### 2. Delete Feature Implementation
+
+The `delete` feature removes an active internship application from the tracker.
+
+#### 2.1 Implementation Details
+
+The feature is implemented through `DeleteCommandParser` and `DeleteCommand`.
+
+**2.1.1 Parsing Logic**
+
+The `DeleteCommandParser#parse()` method:
+
+1. Verifies that an index is provided.
+2. Parses the index as an integer.
+3. Rejects non-numeric or non-positive values with an `InternTrackrException`.
+
+**2.1.2 Execution Logic**
+
+When `DeleteCommand#execute()` is called:
+
+1. It resolves the provided index against the active applications only using `ApplicationList#getActiveApplication()`.
+2. It finds the same application’s actual position in the full backing list.
+3. It removes the application from the backing list using `ApplicationList#deleteApplication()`.
+4. It displays a confirmation message through `Ui`.
+5. It immediately calls `Storage#save()` so the deletion is persisted.
+
+This design ensures that the index used by `delete` always matches what the user sees in the default `list` output, which excludes archived applications.
+
+![Delete Command Sequence Diagram](images/AaravDeleteCommandSequence.png)
+
+#### 2.2 Design Considerations
+
+**Aspect: Indexing archived vs active applications**
+
+* **Alternative 1:** Delete directly by backing-list index.
+  * *Pros:* Simpler internal implementation.
+  * *Cons:* The index would not match the default list shown to users once archived entries exist.
+* **Alternative 2 (Current Choice):** Resolve the index against active applications first.
+  * *Reasoning:* This keeps command behavior consistent with the visible list and reduces user confusion.
+
+---
+
+### 3. Parser Implementation
+
+The `Parser` component is responsible for dispatching raw user input to the correct command parser or command object.
+
+#### 3.1 Implementation Details
+
+When `Parser#parse()` is called:
+
+1. It validates that the input is not null or blank.
+2. It rejects inputs containing the `|` character to protect the storage format.
+3. It splits the input into the command word and argument string.
+4. It normalizes the command word to lowercase.
+5. It uses a `switch` statement to route the input to the correct parser or command constructor.
+6. For commands such as `add`, `delete`, and `archive`, it delegates parsing to `AddCommandParser`, `DeleteCommandParser`, and `ArchiveCommandParser` respectively.
+7. For `list`, it supports both `list` and `list archive`.
+8. If the command word does not match any known command, it throws an `InternTrackrException`.
+
+Unlike `add`, `delete`, and `archive`, `list archive` does not use a dedicated parser class. Instead, `Parser` handles it directly because its parsing logic is simple.
+
+![Parser Sequence Diagram](images/AaravParserSequence.png)
+
+#### 3.2 Design Considerations
+
+**Aspect: Centralized command dispatch**
+
+* **Alternative 1:** Let each feature perform its own top-level command matching.
+  * *Pros:* Each feature is more self-contained.
+  * *Cons:* Command routing logic becomes duplicated and harder to maintain.
+* **Alternative 2 (Current Choice):** Use a centralized `Parser` dispatcher.
+  * *Reasoning:* This keeps command recognition in one place and makes the overall control flow easier to understand and extend.
+
+**Aspect: No dedicated parser for `list archive`**
+
+* **Alternative 1:** Introduce a separate `ListArchiveCommandParser`.
+  * *Pros:* Symmetry with the other commands.
+  * *Cons:* Adds another class for very little parsing logic.
+* **Alternative 2 (Current Choice):** Handle `list archive` directly inside `Parser`.
+  * *Reasoning:* Since the command only checks whether the `list` argument is `archive`, a dedicated parser would add unnecessary complexity.
+
+---
+
+### 4. Archive Feature Implementation
+
+The `archive` feature allows users to hide an application from the default list while keeping it in storage.
+
+#### 4.1 Implementation Details
+
+The feature is implemented through `ArchiveCommandParser` and `ArchiveCommand`.
+
+**4.1.1 Parsing Logic**
+
+The `ArchiveCommandParser#parse()` method:
+
+1. Checks that an index is provided.
+2. Parses the index as an integer.
+3. Rejects non-numeric or non-positive values with an `InternTrackrException`.
+
+**4.1.2 Execution Logic**
+
+When `ArchiveCommand#execute()` is called:
+
+1. It resolves the provided index against the active applications using `ApplicationList#getActiveApplication()`.
+2. It marks the target application as archived by calling `Application#setArchived(true)`.
+3. It shows confirmation output through `Ui`.
+4. It immediately calls `Storage#save()` so the archived state is persisted.
+
+Once archived, the application no longer appears in the default `list` output, but it can still be viewed with `list archive`.
+
+![Archive Command Sequence Diagram](images/AaravArchiveCommandSequence.png)
+
+#### 4.2 Design Considerations
+
+**Aspect: Archive vs permanent deletion**
+
+* **Alternative 1:** Delete rejected or inactive applications permanently.
+  * *Pros:* Keeps the list short.
+  * *Cons:* Users lose historical records that may still be useful for reference.
+* **Alternative 2 (Current Choice):** Archive applications instead of deleting them.
+  * *Reasoning:* This preserves application history while keeping the active list uncluttered.
+
+---
+
+### 5. List Archive Feature Implementation
+
+The `list archive` feature displays all archived internship applications.
+
+#### 5.1 Implementation Details
+
+The feature is implemented through `Parser` and `ListArchiveCommand`.
+
+`Parser` directly returns a `ListArchiveCommand` when it detects the input `list archive`.
+
+When `ListArchiveCommand#execute()` is called:
+
+1. It iterates through the full `ApplicationList`.
+2. It counts how many applications are archived.
+3. If no archived applications exist, it informs the user.
+4. Otherwise, it prints a header and lists each archived application using a separate display index.
+5. If an archived application contains a note, the note is displayed underneath it.
+
+This feature is read-only and does not call `Storage#save()`.
+
+![List Archive Command Sequence Diagram](images/AaravListArchiveCommandSequence.png)
+
+#### 5.2 Design Considerations
+
+**Aspect: Showing archived entries in a separate view**
+
+* **Alternative 1:** Show archived and active applications together in one list.
+  * *Pros:* All data is visible in one command.
+  * *Cons:* The default list becomes cluttered and less useful for active job tracking.
+* **Alternative 2 (Current Choice):** Keep archived entries in a separate `list archive` view.
+  * *Reasoning:* This preserves historical data while keeping the primary workflow focused on active applications.
+
+<!-- @@author -->
+
+---
 
 ## Product scope
 ### Target user profile

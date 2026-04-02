@@ -1,0 +1,32 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant ":AddCommandParser" as ACP
+participant "c:AddCommand" as AC
+participant ":ApplicationList" as AL
+participant ":Storage" as S
+
+User -> UI : types "add c/Google r/SWE Intern"
+IT -> UI : readCommand()
+UI --> IT : "add c/Google r/SWE Intern"
+
+IT -> P : parse("add c/Google r/SWE Intern")
+P -> ACP : parse("c/Google r/SWE Intern")
+ACP --> P : c (AddCommand)
+P --> IT : c
+
+IT -> AC : execute(applications, ui, storage)
+AC -> AL : hasApplication(new Application)
+AL --> AC : false
+
+AC -> AL : addApplication(newApp)
+AL --> AC
+
+AC -> S : save(applications)
+S --> AC
+
+AC -> UI : showMessage(add confirmation)
+UI --> User : displays output
+@enduml

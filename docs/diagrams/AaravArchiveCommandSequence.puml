@@ -1,0 +1,33 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant ":ArchiveCommandParser" as ACP
+participant "c:ArchiveCommand" as AC
+participant ":ApplicationList" as AL
+participant "app:Application" as App
+participant ":Storage" as S
+
+User -> UI : types "archive 1"
+IT -> UI : readCommand()
+UI --> IT : "archive 1"
+
+IT -> P : parse("archive 1")
+P -> ACP : parse("1")
+ACP --> P : c (ArchiveCommand)
+P --> IT : c
+
+IT -> AC : execute(applications, ui, storage)
+AC -> AL : getActiveApplication(1)
+AL --> AC : app
+
+AC -> App : setArchived(true)
+App --> AC
+
+AC -> S : save(applications)
+S --> AC
+
+AC -> UI : showMessage(archive confirmation)
+UI --> User : displays output
+@enduml

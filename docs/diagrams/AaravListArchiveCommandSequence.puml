@@ -1,0 +1,38 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant "c:ListArchiveCommand" as LAC
+participant ":ApplicationList" as AL
+participant "app:Application" as App
+
+User -> UI : types "list archive"
+IT -> UI : readCommand()
+UI --> IT : "list archive"
+
+IT -> P : parse("list archive")
+note right of P
+  Parser handles "list archive" directly.
+  No separate parser class is used.
+end note
+P --> IT : c (ListArchiveCommand)
+
+IT -> LAC : execute(applications, ui, storage)
+
+loop for each application
+    LAC -> AL : getApplication(i)
+    AL --> LAC : app
+    LAC -> App : isArchived()
+    App --> LAC : true/false
+end
+
+alt no archived applications
+    LAC -> UI : showMessage("No archived applications found.")
+else archived applications found
+    LAC -> UI : showMessage("Here are your archived internship applications:")
+    LAC -> UI : showMessage(archived applications)
+end
+
+UI --> User : displays output
+@enduml

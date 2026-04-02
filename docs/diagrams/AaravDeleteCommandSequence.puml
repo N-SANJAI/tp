@@ -1,0 +1,35 @@
+@startuml
+actor User
+participant ":Ui" as UI
+participant ":InternTrackr" as IT
+participant ":Parser" as P
+participant ":DeleteCommandParser" as DCP
+participant "c:DeleteCommand" as DC
+participant ":ApplicationList" as AL
+participant ":Storage" as S
+
+User -> UI : types "delete 2"
+IT -> UI : readCommand()
+UI --> IT : "delete 2"
+
+IT -> P : parse("delete 2")
+P -> DCP : parse("2")
+DCP --> P : c (DeleteCommand)
+P --> IT : c
+
+IT -> DC : execute(applications, ui, storage)
+DC -> AL : getActiveApplication(2)
+AL --> DC : appToRemove
+
+DC -> AL : getApplications()
+AL --> DC : applications
+
+DC -> AL : deleteApplication(backingIndex)
+AL --> DC
+
+DC -> S : save(applications)
+S --> DC
+
+DC -> UI : showMessage(delete confirmation)
+UI --> User : displays output
+@enduml
