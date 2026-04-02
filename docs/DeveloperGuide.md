@@ -104,7 +104,42 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 
 ![Help Command Sequence Diagram](images/SanjaiHelpCommandSequence.png)
 
-#### 7. Design Considerations
+<!-- @@author -->
+<!-- @@author eugenia-cnl-lee -->
+#### 7. Deadline List Feature Implementation
+
+The `deadline list` command allows users to view all deadlines associated with a specific application.
+
+**Implementation Details:**
+
+1. The command takes in the target index.
+2. It retrieves the corresponding `Application` from `ApplicationList`.
+3. It accesses the application's associated deadlines.
+4. Each deadline is formatted and displayed via `Ui`.
+
+**Design Considerations**
+
+**Aspect: Supporting multiple deadlines per application**
+
+* **Alternative 1 (previous design):** Store a single `Deadline` in `Application`
+    * Pros: Simpler implementation
+    * Cons: Cannot support multiple deadlines per application
+
+* **Alternative 2 (Current Choice):** Introduce a `DeadlineList`
+    * Pros: Supports multiple deadlines and enables future features such as sorting and filtering
+    * Cons: Requires refactoring across model, storage, and commands
+
+* **Reasoning:** Internship applications often involve multiple stages (e.g. OA, interviews, offers),
+each with its own deadline. Supporting multiple deadlines improves realism and extensibility.
+
+**Notes**
+
+* Index validation ensures safe access to applications
+* If no deadlines exist, an appropriate message is shown to the user
+
+<!-- @@author -->
+
+#### 8. Design Considerations
 
 **Aspect: Handling an empty application list during `overview`**
 
@@ -117,8 +152,6 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 * **Alternative 1:** Pass a valid `Storage` object to every command for consistency.
 * **Alternative 2 (Current Choice):** Pass `null` for `Storage` when calling read-only commands.
 * **Reasoning:** Since `OverviewCommand` and `HelpCommand` never write anything, giving them a live `Storage` reference risks accidental side effects. Passing `null` (guarded by `assert` statements) keeps the execution lightweight and the intent clear.
-
-<!-- @@author -->
 
 ---
 
@@ -139,11 +172,13 @@ survives between sessions without requiring a database.
 **1.1 File Format**
 
 Each application is stored as a single pipe-delimited line in `data/interntrackr.txt`.
-There are two possible formats depending on whether a deadline has been set:
+There are multiple possible formats depending on the fields present:
 ```
 company | role | status
-company | role | status | deadlineType | dueDate | isDone
+company | role | status | contactName | contactEmail
+company | role | status | contactName | contactEmail | deadlineType | dueDate | isDone 
 ```
+Each application may have zero or more deadlines appended to the end of the line.
 
 This format was chosen because it is human-readable and easy to edit manually,
 satisfying the course constraint of using a human-editable storage format.
@@ -160,12 +195,12 @@ if it does not exist yet.
 On startup, `Storage#load()` reads the file line by line and reconstructs
 `Application` objects. The method handles two cases:
 
-* **3 parts** (`company | role | status`) — loads a plain `Application` with no deadline.
-* **6 parts** (`company | role | status | deadlineType | dueDate | isDone`) —
-  reconstructs a `Deadline` object and attaches it to the `Application`.
+The method handles variable-length input:
 
-Any line with fewer than 3 parts, an unrecognised status, or an unparseable date throws
-an `InternTrackrException` with a clear message indicating the corrupted line number.
+* First 3 fields → `company`, `role`, `status`
+* Next 2 fields (optional) → `contactName`, `contactEmail`
+* Remaining fields → parsed in groups of 3 as deadlines:
+  * `deadlineType`, `dueDate`, `isDone`
 
 The sequence diagram below shows how `Storage#load()` behaves during app startup:
 
@@ -238,12 +273,30 @@ if (index < 1 || index > applications.size()) {
 
 This prevents `IndexOutOfBoundsException` from propagating up to the user as a
 cryptic crash.
+          
+<!-- @@eugenia-cnl-lee -->         
+**2.3 Refactoring Application to support multiple deadlines**
 
----
+Originally, each `Application` stored only a single `Deadline`.
+This design limited the system to one deadline per application.
+To support more realistic workflows, the model was extended to allow multiple deadlines per application.
 
-#### 3. ListCommand and UI Abstraction
+***Rationale***
 
-The `list` command displays all currently tracked applications to the user.
+Internship processes typically involve multiple stages, each with its own deadline
+(e.g. online assessments, interviews, offer acceptance).
+Supporting only a single deadline restricts usability and prevents implementation of features such as deadline listing.
+
+***Impact***
+
+This refactor required coordinated updates across:
+- Model
+- Commands
+- Storage
+
+Despite increased complexity, this improves extensibility and aligns the system with real-world usage.
+
+<!-- @@author -->
 
 **3.1 Implementation**
 
@@ -480,7 +533,7 @@ Reduces missed deadlines and confusion caused by scattered notes, emails, and me
 | v2.0    | user     | add notes to an application                                      | jot down interview thoughts or tech stack requirements                      |
 | v2.0    | user     | view all deadlines sorted by date                                | see which deadline is approaching next                                      |
 | v2.0    | user     | search for an application by company name                        | find specific details quickly without scrolling through the entire list     |
-
+| v2.0    | user     |add recruiter contact information/email to an application         | find who to contact for follow-ups.
 ## Non-Functional Requirements
 
 {Give non-functional requirements}

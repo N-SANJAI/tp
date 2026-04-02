@@ -63,17 +63,7 @@ Shows a list of all applications.
 
 ### Deleting an application : `delete`
 
-Deletes the specified application.
-
-**Format:** `delete INDEX`
-
-- Deletes the application at the given `INDEX`.
-- The index refers to the index number shown in the displayed application list.
-- `INDEX` must be a positive integer 1, 2, 3, ...
-
-**Examples:**
-
-- `delete 2`
+```COMING SOON```
 
 ### Updating application status : `status`
 
@@ -184,18 +174,7 @@ Shows deadlines linked to a specific application.
 
 ### Marking a deadline as done : `deadline done`
 
-Marks a specific deadline as completed.
-
-**Format:** `deadline done INDEX i/DEADLINE_INDEX`
-
-- `DEADLINE_INDEX` refers to the deadline number shown in `deadline list`.
-
-**Example flow:**
-
-```
-deadline list 1
-deadline done 1 i/1
-```
+```COMING SOON```
 
 ### Viewing overview : `overview`
 
@@ -244,7 +223,6 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 | Add application    | `add c/COMPANY r/ROLE`                       | `add c/"Shopee" r/"Backend Intern"`                                   |
 | List applications  | `list`                                       | `list`                                                                |
 | Find applications  | `find KEYWORD`                               | `find Shopee`                                                         |
-| Delete application | `delete INDEX`                               | `delete 2`                                                            |
 | Update status      | `status INDEX s/STATUS`                      | `status 1 s/"Interview"`                                              |
 | Log an offer       | `offer INDEX SALARY`                         | `offer 1 5000.00`                                                     |
 | Archive application| `archive INDEX`                              | `archive 1`                                                           |
@@ -254,7 +232,6 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 | Clear filter       | `filter clear`                               | `filter clear`                                                        |
 | Add deadline       | `deadline add INDEX t/TYPE d/DATE [n/NOTES]` | `deadline add 1 t/Submission d/01-03-2026 n/"Need to reply by email"` |
 | List deadlines     | `deadline list INDEX`                        | `deadline list 1`                                                     |
-| Mark deadline done | `deadline done INDEX i/DEADLINE_INDEX`       | `deadline done 1 i/1`                                                 |
 | Overview           | `overview`                                   | `overview`                                                            |
 | Clear all data     | `clear`                                      | `clear`                                                               |
 | Exit               | `exit`                                       | `exit`                                                                |
