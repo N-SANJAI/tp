@@ -40,7 +40,7 @@ Refer to the [Features](#features) section below for details.
 
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
+Shows a message explaining how to access the full online User Guide.
 
 **Format:** `help`
 
@@ -88,6 +88,47 @@ Updates the status of an existing application.
 
 - `status 1 s/"Pending"`
 - `status 3 s/"Interview"`
+
+### Logging an offer : `offer`
+
+Updates an application with an offered salary and automatically changes its status to "Offered".
+
+**Format:** `offer INDEX SALARY`
+
+- Updates the application at the given `INDEX`.
+- Logs the `SALARY` for compensation tracking.
+
+**Example:**
+- `offer 1 5000.00`
+- `offer 2 4500`
+
+### Archiving an application : `archive`
+
+//TODO: Teammates to fill in description.
+
+**Format:** `archive INDEX`
+
+### Adding a contact : `contact`
+
+Links recruiter or networking details to a specific internship application.
+
+**Format:** `contact INDEX c/NAME e/EMAIL`
+
+* The index refers to the index number shown in the displayed application list.
+* `INDEX` must be a positive integer 1, 2, 3, ...
+* **Note:** The contact name (`c/`) must be specified before the contact email (`e/`).
+
+**Examples:**
+
+- `contact 1 c/"John Doe" e/"john.doe@example.com"`
+- `contact 3 c/"Jane Smith HR" e/"jane.smith@shopee.com"`
+
+**Format:** `contact INDEX c/NAME e/EMAIL`
+
+### Adding a note : `note`
+
+//TODO: Teammates to fill in description.
+
 
 ### Filtering by status : `filter`
 
@@ -158,15 +199,14 @@ deadline done 1 i/1
 
 ### Viewing overview : `overview`
 
-Shows a quick summary of your internship applications.
+Shows a quantitative summary of your internship applications and current statuses.
 
 **Format:** `overview`
 
 Overview includes:
 
-- Total number of applications
-- Count by status
-- Upcoming deadlines sorted by soonest first
+- Total number of tracked applications.
+- Count of applications broken down by their current status.
 
 ### Clearing all data : `clear`
 
@@ -206,6 +246,10 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 | Find applications  | `find KEYWORD`                               | `find Shopee`                                                         |
 | Delete application | `delete INDEX`                               | `delete 2`                                                            |
 | Update status      | `status INDEX s/STATUS`                      | `status 1 s/"Interview"`                                              |
+| Log an offer       | `offer INDEX SALARY`                         | `offer 1 5000.00`                                                     |
+| Archive application| `archive INDEX`                              | `archive 1`                                                           |
+| Add contact        | `contact INDEX c/NAME e/EMAIL`               | `contact 1 c/"John Doe" e/"john.doe@example.com"`                     |
+| Add note           | `note INDEX n/NOTE_CONTENT`                  | `note 1 n/"Remember to review OOP concepts"`                          |
 | Filter by status   | `filter s/STATUS`                            | `filter s/"Pending"`                                                  |
 | Clear filter       | `filter clear`                               | `filter clear`                                                        |
 | Add deadline       | `deadline add INDEX t/TYPE d/DATE [n/NOTES]` | `deadline add 1 t/Submission d/01-03-2026 n/"Need to reply by email"` |
