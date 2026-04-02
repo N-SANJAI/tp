@@ -82,7 +82,7 @@ Updates the status of an existing application.
 **Format:** `status INDEX s/STATUS`
 
 - Updates the application at `INDEX`.
-- `STATUS` should be one of the statuses your team supports (for example: Applied, Pending, Interview, Offer, Rejected).
+- `STATUS` should be one of the statuses supported (Applied, Pending, Interview, Offered, Rejected).
 
 **Examples:**
 
