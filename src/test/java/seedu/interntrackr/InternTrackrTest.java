@@ -235,8 +235,8 @@ class InternTrackrTest {
     @Test
     public void main_withMultipleArgsIncludingLoggingFlag_parsesLoggingFlagCorrectly() {
         System.setIn(new ByteArrayInputStream("exit\n".getBytes()));
-        InternTrackr.main(new String[]{"--some-other-flag", "--enable-logging",
-                "--another-flag"});
+        String[] args = {"--some-other-flag", "--enable-logging", "--another-flag"};
+        InternTrackr.main(args);
 
         String output = outContent.toString();
         assertTrue(output.contains("Welcome to InternTrackr!"),
