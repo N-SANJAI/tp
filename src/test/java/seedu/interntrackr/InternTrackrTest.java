@@ -52,7 +52,8 @@ class InternTrackrTest {
     }
 
     @Test
-    public void constructor_corruptedFile_initializesEmptyListAndShowsLoadingError() throws Exception {
+    public void constructor_corruptedFile_initializesEmptyListAndShowsLoadingError()
+            throws Exception {
         File tempFile = File.createTempFile("corrupt_test", ".txt");
         tempFile.deleteOnExit();
         try (FileWriter fw = new FileWriter(tempFile)) {
@@ -147,7 +148,8 @@ class InternTrackrTest {
         File tempFile = File.createTempFile("interntrackr_run_test", ".txt");
         tempFile.deleteOnExit();
 
-        System.setIn(new ByteArrayInputStream("add c/Google r/SWE\noverview\nexit\n".getBytes()));
+        System.setIn(new ByteArrayInputStream(
+                "add c/Google r/SWE\noverview\nexit\n".getBytes()));
         InternTrackr tracker = new InternTrackr(tempFile.getAbsolutePath());
         tracker.run();
 
@@ -176,7 +178,13 @@ class InternTrackrTest {
 
     @Test
     public void run_commandSequenceWithMultipleOperations_executesCorrectly() {
-        InternTrackr tracker = makeTracker("add c/Microsoft r/SDE\nlist\nadd c/Apple r/Software Engineer\nlist\noverview\nexit\n");
+        String commands = "add c/Microsoft r/SDE\n"
+                + "list\n"
+                + "add c/Apple r/Software Engineer\n"
+                + "list\n"
+                + "overview\n"
+                + "exit\n";
+        InternTrackr tracker = makeTracker(commands);
         tracker.run();
 
         String output = outContent.toString();
@@ -227,7 +235,8 @@ class InternTrackrTest {
     @Test
     public void main_withMultipleArgsIncludingLoggingFlag_parsesLoggingFlagCorrectly() {
         System.setIn(new ByteArrayInputStream("exit\n".getBytes()));
-        InternTrackr.main(new String[]{"--some-other-flag", "--enable-logging", "--another-flag"});
+        InternTrackr.main(new String[]{"--some-other-flag", "--enable-logging",
+                "--another-flag"});
 
         String output = outContent.toString();
         assertTrue(output.contains("Welcome to InternTrackr!"),
