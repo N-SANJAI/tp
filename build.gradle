@@ -34,7 +34,7 @@ application {
 }
 
 shadowJar {
-    archiveBaseName.set("interntrackr")
+    archiveBaseName.set("internTrackr")
     archiveClassifier.set("")
 }
 
