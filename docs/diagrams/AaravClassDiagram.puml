@@ -6,6 +6,7 @@ abstract class Command {
 class AddCommand
 class DeleteCommand
 class ArchiveCommand
+class UnarchiveCommand
 class ListArchiveCommand
 
 class Parser {
@@ -15,11 +16,14 @@ class Parser {
 class AddCommandParser
 class DeleteCommandParser
 class ArchiveCommandParser
+class UnarchiveCommandParser
 
 class ApplicationList {
     +getActiveApplication(index)
+    +getArchivedApplication(index)
     +hasApplication(app)
     +countActive()
+    +countArchived()
 }
 
 class Application {
@@ -31,15 +35,18 @@ class Application {
 Command <|-- AddCommand
 Command <|-- DeleteCommand
 Command <|-- ArchiveCommand
+Command <|-- UnarchiveCommand
 Command <|-- ListArchiveCommand
 
 Parser ..> AddCommandParser : delegates to
 Parser ..> DeleteCommandParser : delegates to
 Parser ..> ArchiveCommandParser : delegates to
+Parser ..> UnarchiveCommandParser : delegates to
 
 AddCommand ..> ApplicationList
 DeleteCommand ..> ApplicationList
 ArchiveCommand ..> ApplicationList
+UnarchiveCommand ..> ApplicationList
 ListArchiveCommand ..> ApplicationList
 
 ApplicationList "1" *-- "0..*" Application

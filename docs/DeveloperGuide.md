@@ -568,7 +568,7 @@ The diagram below illustrates the confirmation loop and subsequent data clearing
 ---
 <!-- @@author Aarav -->
 
-### Add, Delete, Parser, Archive and List Archive Feature Implementation
+### Add, Delete, Parser, Archive, List Archive and Unarchive Feature Implementation
 
 **Author:** Aarav
 
@@ -580,7 +580,7 @@ The diagram below shows the classes involved in Aarav's features and their relat
 
 ![Class Diagram](images/AaravClassDiagram.png)
 
-`Parser` acts as a pure dispatcher, delegating argument parsing to dedicated `XYZCommandParser` classes. Each command class operates on `ApplicationList`, which internally manages `Application` objects. The `isArchived` field on `Application` is the shared state that connects the archive, list, and delete workflows.
+`Parser` acts as a pure dispatcher, delegating argument parsing to dedicated `XYZCommandParser` classes. Each command class operates on `ApplicationList`, which internally manages `Application` objects. The `isArchived` field on `Application` is the shared state that connects the archive, unarchive, list archive, and delete workflows.
 
 ---
 
@@ -681,7 +681,7 @@ When `Parser#parse()` is called:
 3. It splits the input into the command word and argument string.
 4. It normalizes the command word to lowercase.
 5. It uses a `switch` statement to route the input to the correct parser or command constructor.
-6. For commands such as `add`, `delete`, and `archive`, it delegates parsing to `AddCommandParser`, `DeleteCommandParser`, and `ArchiveCommandParser` respectively.
+6. For commands such as `add`, `delete`, `archive`, and `unarchive`, it delegates parsing to `AddCommandParser`, `DeleteCommandParser`, `ArchiveCommandParser`, and `UnarchiveCommandParser` respectively.
 7. For `list`, it supports both `list` (returns `ListCommand`) and `list archive` (returns `ListArchiveCommand`). Any other argument after `list` throws an `InternTrackrException`.
 8. If the command word does not match any known command, it throws an `InternTrackrException`.
 
@@ -804,6 +804,52 @@ This feature is read-only and does not call `Storage#save()`.
   * *Cons:* The header `"Here are your archived internship applications:"` would need to be printed before knowing whether there are any results, leading to an awkward header followed by an empty message.
 * **Alternative 2 (Current Choice):** Two passes — count first, then display.
   * *Reasoning:* Ensures the header is only printed when there are actual results to show, producing cleaner output.
+
+
+---
+
+#### 7. Unarchive Feature Implementation
+
+The `unarchive` feature allows users to restore a previously archived application back to the active list.
+
+##### 7.1 Implementation Details
+
+The feature is implemented through `UnarchiveCommandParser` and `UnarchiveCommand`.
+
+**7.1.1 Parsing Logic**
+
+The `UnarchiveCommandParser#parse()` method:
+
+1. Checks that an index is provided.
+2. Parses the index as an integer.
+3. Rejects non-numeric or non-positive values with an `InternTrackrException`.
+
+**7.1.2 Execution Logic**
+
+When `UnarchiveCommand#execute()` is called:
+
+1. It resolves the provided index against the archived applications using `ApplicationList#getArchivedApplication()`.
+2. It restores the target application by calling `Application#setArchived(false)`.
+3. It shows confirmation output through `Ui`.
+4. It immediately calls `Storage#save()` so the restored state is persisted.
+
+Once unarchived, the application reappears in the default `list` output and no longer appears in `list archive`.
+
+![Unarchive Command Sequence Diagram](images/AaravUnarchiveCommandSequence.png)
+
+##### 7.2 Design Considerations
+
+**Aspect: Indexing against `list archive` output**
+
+* **Alternative 1:** Resolve the index against the full backing list.
+  * *Pros:* Simpler implementation.
+  * *Cons:* The index would not match what the user sees in `list archive`, causing confusion.
+* **Alternative 2 (Current Choice):** Resolve the index against archived entries only via `ApplicationList#getArchivedApplication()`.
+  * *Reasoning:* This keeps `unarchive` consistent with `list archive` — the user uses the same index they see on screen.
+
+**Aspect: Symmetric design with `archive`**
+
+* The `unarchive` command is intentionally symmetric with `archive`. Both resolve their index against the view the user is operating in (`list` for `archive`, `list archive` for `unarchive`), and both immediately persist the change via `Storage#save()`.
 
 <!-- @@author -->
 
