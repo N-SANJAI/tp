@@ -239,12 +239,18 @@ Finds applications whose company name or role contains the specified keyword.
 
 ### Adding a deadline : `deadline add`
 
-Adds an important date linked to an application (deadline, submission date, offer expiry).
+Adds an important deadline linked to an application.
 
 **Format:** `deadline add INDEX t/TYPE d/DATE [n/NOTES]`
 
-- `TYPE` describes the deadline type (example values: Submission, OfferExpiry).
+- `INDEX` refers to the application's index number shown in the default application list.
+- `INDEX` must be a positive integer 1, 2, 3, ...
+- `TYPE` describes the deadline type.
 - `DATE` must be in `DD-MM-YYYY`.
+
+> **Note:** One application can contain multiple deadlines.
+> Running `deadline add` on an application that already has deadline(s) linked to it will
+> **not** overwrite the previous deadlines.
 
 **Examples:**
 
@@ -253,17 +259,41 @@ Adds an important date linked to an application (deadline, submission date, offe
 
 ### Listing deadlines : `deadline list`
 
-Shows deadlines linked to a specific application.
+Shows a list of all the deadlines linked to a specific application.
 
 **Format:** `deadline list INDEX`
+
+- `INDEX` refers to the application's index number shown in the default application list.
+- `INDEX` must be a positive integer 1, 2, 3, ...
 
 **Example:**
 
 - `deadline list 1`
 
+**Example output:**
+```
+Here are the deadlines for this application:
+1. Deadline Type: Submission | Due Date: 2026-03-01 | Done: [ ]
+2. Deadline Type: OfferExpiry | Due Date: 2026-03-10 | Done: [ ]
+```
+
 ### Marking a deadline as done : `deadline done`
 
-```COMING SOON```
+Marks a specific deadline as completed.
+
+**Format:** `deadline done INDEX i/DEADLINE_INDEX`
+
+- `INDEX` refers to the application's index number shown in the default application list.
+- `DEADLINE_INDEX` refers to the deadline number shown in `deadline list`.
+- `INDEX` must be a positive integer 1, 2, 3, ...
+- `DEADLINE_INDEX` must be a positive integer 1, 2, 3, ...
+
+**Example flow:**
+
+```
+deadline list 1
+deadline done 1 i/1
+```
 
 ### Viewing overview : `overview`
 
@@ -306,24 +336,25 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 
 ## Command Summary
 
-| Action                      | Format                                       | Example                                                               |
-|-----------------------------|----------------------------------------------|-----------------------------------------------------------------------|
-| Help                        | `help`                                       | `help`                                                                |
-| Add application             | `add c/COMPANY r/ROLE`                       | `add c/"Shopee" r/"Backend Intern"`                                   |
-| List applications           | `list`                                       | `list`                                                                |
-| List archived applications  | `list archive`                               | `list archive`                                                        |
-| Find applications           | `find KEYWORD`                               | `find Shopee`                                                         |
-| Delete application          | `delete INDEX`                               | `delete 2`                                                            |
-| Update status               | `status INDEX s/STATUS`                      | `status 1 s/"Interview"`                                              |
-| Log an offer                | `offer INDEX s/SALARY`                       | `offer 1 s/5000.00`                                                   |
-| Archive application         | `archive INDEX`                              | `archive 1`                                                           |
-| Restore archived application| `unarchive INDEX`                            | `unarchive 1`                                                         |
-| Add contact                 | `contact INDEX c/NAME e/EMAIL`               | `contact 1 c/"John Doe" e/"john.doe@example.com"`                     |
-| Add note                    | `note INDEX n/NOTE_CONTENT`                  | `note 1 n/"Remember to review OOP concepts"`                          |
-| Filter by status            | `filter s/STATUS`                            | `filter s/"Pending"`                                                  |
-| Clear filter                | `filter clear`                               | `filter clear`                                                        |
-| Add deadline                | `deadline add INDEX t/TYPE d/DATE [n/NOTES]` | `deadline add 1 t/Submission d/01-03-2026 n/"Need to reply by email"` |
-| List deadlines              | `deadline list INDEX`                        | `deadline list 1`                                                     |
-| Overview                    | `overview`                                   | `overview`                                                            |
-| Clear all data              | `clear`                                      | `clear`                                                               |
-| Exit                        | `exit`                                       | `exit`                                                                |
+| Action                       | Format                                       | Example                                                               |
+|------------------------------|----------------------------------------------|-----------------------------------------------------------------------|
+| Help                         | `help`                                       | `help`                                                                |
+| Add application              | `add c/COMPANY r/ROLE`                       | `add c/"Shopee" r/"Backend Intern"`                                   |
+| List applications            | `list`                                       | `list`                                                                |
+| List archived applications   | `list archive`                               | `list archive`                                                        |
+| Find applications            | `find KEYWORD`                               | `find Shopee`                                                         |
+| Delete application           | `delete INDEX`                               | `delete 2`                                                            |
+| Update status                | `status INDEX s/STATUS`                      | `status 1 s/"Interview"`                                              |
+| Log an offer                 | `offer INDEX s/SALARY`                       | `offer 1 s/5000.00`                                                   |
+| Archive application          | `archive INDEX`                              | `archive 1`                                                           |
+| Restore archived application | `unarchive INDEX`                            | `unarchive 1`                                                         |
+| Add contact                  | `contact INDEX c/NAME e/EMAIL`               | `contact 1 c/"John Doe" e/"john.doe@example.com"`                     |
+| Add note                     | `note INDEX n/NOTE_CONTENT`                  | `note 1 n/"Remember to review OOP concepts"`                          |
+| Filter by status             | `filter s/STATUS`                            | `filter s/"Pending"`                                                  |
+| Clear filter                 | `filter clear`                               | `filter clear`                                                        |
+| Add deadline                 | `deadline add INDEX t/TYPE d/DATE [n/NOTES]` | `deadline add 1 t/Submission d/01-03-2026 n/"Need to reply by email"` |
+| List deadlines               | `deadline list INDEX`                        | `deadline list 1`                                                     |
+| Mark deadline as done        | `deadline done INDEX i/DEADLINE_INDEX`       | `deadline done INDEX i/DEADLINE_INDEX`                                |
+| Overview                     | `overview`                                   | `overview`                                                            |
+| Clear all data               | `clear`                                      | `clear`                                                               |
+| Exit                         | `exit`                                       | `exit`                                                                |
