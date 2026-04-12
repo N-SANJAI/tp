@@ -1,31 +1,35 @@
 @startuml
-hide footbox
-participant ":FilterCommand" as FC
+participant ":InternTrackr" as IT
+participant "c:FindCommand" as FC
 participant ":ApplicationList" as AL
-participant "app:Application" as App
 participant ":Ui" as UI
 
-[-> FC : execute(applications, ui, storage)
+[-> IT : executeCommand()
+activate IT
+
+IT -> FC : execute(applications, ui, storage)
 activate FC
 
-FC -> AL : getSize()
+FC -> AL : getApplications()
 activate AL
-AL --> FC : size
+AL --> FC : list
 deactivate AL
 
-loop for each application (1 to size)
-    FC -> AL : getApplication(i)
-    activate AL
-    AL --> FC : app
-    deactivate AL
+note right of FC : Filters list based on keyword\n(Case-insensitive)
 
-    alt status matches searchStatus AND NOT isArchived
-        FC -> UI : showMessage(app.toString())
-        activate UI
-        UI --> FC
-        deactivate UI
-    end
+alt matches found
+    FC -> UI : showMessage(matchingResults)
+    activate UI
+    UI --> FC
+    deactivate UI
+else no matches
+    FC -> UI : showMessage("No matching applications found.")
+    activate UI
+    UI --> FC
+    deactivate UI
 end
-[<-- FC
+
 deactivate FC
+[<-- IT
+deactivate IT
 @enduml
