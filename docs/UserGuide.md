@@ -218,11 +218,23 @@ Shows only applications that match a given status.
 **Examples:**
 
 - `filter s/"Pending"`
-- `filter s/"Interview"`
+
+**Example output:**
+```
+Here are the applications with status: Pending
+1. Company: Shopee | Role: Backend Intern | Status: Pending | ...
+```
 
 To clear the filter:
 
 **Format:** `filter clear`
+
+**Example output:**
+```
+Filter cleared. Showing all applications:
+1. Company: Shopee | Role: Backend Intern | Status: Pending | ...
+2. Company: Grab | Role: Data Analyst Intern | Status: Offered | ...
+```
 
 ### Finding applications : `find`
 
@@ -235,7 +247,13 @@ Finds applications whose company name or role contains the specified keyword.
 
 **Examples:**
 * `find Shopee`
-* `find "Software Engineer"`
+* `find Backend Intern`
+
+**Example output:**
+```
+Here are the matching applications in your list:`
+1. Company: Shopee | Role: Backend Intern | Status: Applied | ...
+```
 
 ### Adding a deadline : `deadline add`
 
@@ -314,9 +332,6 @@ Clears all internship applications from the list.
 
 * You will be prompted to type `yes` to confirm the action.
 * This action is irreversible and wipes all saved data.
-
-**Example:**
-* `clear`
 
 ### Exiting the program : `exit`
 
