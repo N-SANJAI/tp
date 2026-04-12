@@ -103,12 +103,16 @@ Updates the status of an existing application.
 **Format:** `status INDEX s/STATUS`
 
 - Updates the application at `INDEX`.
-- `STATUS` should be one of the statuses supported (Applied, Pending, Interview, Offered, Rejected).
+- `STATUS` should be one of the statuses supported (Applied, Pending, Interview, Offered, Rejected, Accepted).
 
 **Examples:**
 
 - `status 1 s/"Pending"`
-- `status 3 s/"Interview"`
+
+**Example output:**
+```
+Status updated! Shopee is now marked as [Pending]
+```
 
 ### Logging an offer : `offer`
 
