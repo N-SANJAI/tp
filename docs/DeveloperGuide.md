@@ -104,40 +104,6 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 
 ![Help Command Sequence Diagram](images/SanjaiHelpCommandSequence.png)
 
-<!-- @@author -->
-<!-- @@author eugenia-cnl-lee -->
-#### 7. Deadline List Feature Implementation
-
-The `deadline list` command allows users to view all deadlines associated with a specific application.
-
-**Implementation Details:**
-
-1. The command takes in the target index.
-2. It retrieves the corresponding `Application` from `ApplicationList`.
-3. It accesses the application's associated deadlines.
-4. Each deadline is formatted and displayed via `Ui`.
-
-**Design Considerations**
-
-**Aspect: Supporting multiple deadlines per application**
-
-* **Alternative 1 (previous design):** Store a single `Deadline` in `Application`
-    * Pros: Simpler implementation
-    * Cons: Cannot support multiple deadlines per application
-
-* **Alternative 2 (Current Choice):** Introduce a `DeadlineList`
-    * Pros: Supports multiple deadlines and enables future features such as sorting and filtering
-    * Cons: Requires refactoring across model, storage, and commands
-
-* **Reasoning:** Internship applications often involve multiple stages (e.g. OA, interviews, offers),
-each with its own deadline. Supporting multiple deadlines improves realism and extensibility.
-
-**Notes**
-
-* Index validation ensures safe access to applications
-* If no deadlines exist, an appropriate message is shown to the user
-
-<!-- @@author -->
 
 #### 8. Design Considerations
 
@@ -155,6 +121,42 @@ each with its own deadline. Supporting multiple deadlines improves realism and e
 * **Alternative 2:** Pass `null` for `Storage` when calling read-only commands.
 * **Reasoning against:** Although read-only commands do not use `Storage`, passing `null` would require every call site to know which commands are "read-only", breaking the uniform command interface and risking `NullPointerException` if that assumption ever changes.
 ---
+<!-- @@author -->
+
+<!-- @@author eugenia-cnl-lee -->
+### Deadline Features
+
+**Author:** Eugenia
+
+The `deadline list` command allows users to view all deadlines associated with a specific application.
+
+#### Implementation Details
+
+1. The command takes in the target index.
+2. It retrieves the corresponding `Application` from `ApplicationList`.
+3. It accesses the application's associated deadlines.
+4. Each deadline is formatted and displayed via `Ui`.
+
+#### Design Considerations
+
+**Aspect: Supporting multiple deadlines per application**
+
+* **Alternative 1 (previous design):** Store a single `Deadline` in `Application`
+  * Pros: Simpler implementation
+  * Cons: Cannot support multiple deadlines per application
+
+* **Alternative 2 (Current Choice):** Introduce a `DeadlineList`
+  * Pros: Supports multiple deadlines and enables future features such as sorting and filtering
+  * Cons: Requires refactoring across model, storage, and commands
+
+* **Reasoning:** Internship applications often involve multiple stages (e.g. OA, interviews, offers), each with its own deadline. Supporting multiple deadlines improves realism and extensibility.
+
+#### Notes
+
+* Index validation ensures safe access to applications
+* If no deadlines exist, an appropriate message is shown to the user
+---
+<!-- @@author -->
 
 <!-- @@author Shyamal -->
 
