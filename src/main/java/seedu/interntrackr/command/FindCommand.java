@@ -61,7 +61,7 @@ public class FindCommand extends Command {
             ui.showMessage("Here are the matching applications in your list:");
             for (int i = 0; i < matchingApps.size(); i++) {
                 Application app = matchingApps.get(i);
-                ui.showMessage(matchingIndices.get(i) + ". " + app.toString());
+                ui.showMessage(matchingIndices.get(i) + ". " + app.toSummaryString());
                 if (app.getNote() != null && !app.getNote().trim().isEmpty()) {
                     ui.showMessage("   Note: " + app.getNote());
                 }
