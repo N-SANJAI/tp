@@ -74,6 +74,9 @@ directly below that application's details.
 
 **Format:** `list`
 
+- Only active (non-archived) applications are shown.
+  Use `list archive` to view archived applications.
+
 **Example output:**
 ```
 Here are your internship applications:
@@ -204,7 +207,8 @@ or any other application-specific insights.
 
 - Adds or **overwrites** the existing note for the application at `INDEX`.
 - `INDEX` must be a positive integer 1, 2, 3, ...
-- `NOTE_CONTENT` can contain any text including spaces and special characters.
+- `NOTE_CONTENT` can contain any text including spaces and special characters,
+  except the pipe character (`|`) which is reserved for internal storage.
 
 **Examples:**
 

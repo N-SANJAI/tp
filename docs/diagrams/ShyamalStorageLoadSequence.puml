@@ -1,33 +1,42 @@
 @startuml
 actor User
 participant ":InternTrackr" as IT
+participant ":Ui" as UI
 participant ":Storage" as S
 participant ":ApplicationList" as AL
-participant ":Application" as A
 
 User -> IT : launches app
+activate IT
+
 IT -> S : load()
-S -> S : check file exists
+activate S
 
 alt file does not exist
     S --> IT : empty ArrayList
 else file exists
-    loop for each line in file
-        S -> S : split line by " | "
-        alt 3 parts (no deadline)
-            S -> A : new Application(company, role, status)
-            A --> S : application
-        else 6 parts (with deadline)
-            S -> A : new Application(company, role, status, deadline)
-            A --> S : application
-        else corrupted line
-            S --> IT : throws InternTrackrException
-        end
-    end
+    S -> S : parseLine() for each line
+    note right of S : Parses each line into\nApplication objects.\nThrows InternTrackrException\nif any line is corrupted.
     S --> IT : ArrayList<Application>
 end
 
-IT -> AL : new ApplicationList(applications)
-AL --> IT : applicationList
+deactivate S
+
+alt load successful
+    IT -> AL : new ApplicationList(applications)
+    activate AL
+    AL --> IT : applicationList
+    deactivate AL
+else InternTrackrException thrown
+    IT -> UI : showLoadingError()
+    activate UI
+    UI --> IT : done
+    deactivate UI
+    IT -> AL : new ApplicationList()
+    activate AL
+    AL --> IT : empty applicationList
+    deactivate AL
+end
+
+deactivate IT
 IT --> User : app ready
 @enduml

@@ -280,6 +280,8 @@ if (index < 1 || index > applications.size()) {
 This prevents `IndexOutOfBoundsException` from propagating up to the user as a
 cryptic crash.
 
+`getActiveApplication`(int displayIndex) additionally handles the empty-list case explicitly: when no active applications exist, it throws "No applications found. Start adding some!" instead of the misleading "between 1 and 0" message that would otherwise result from an empty valid range.
+
 ---
 
 #### 3. ListCommand and UI Abstraction

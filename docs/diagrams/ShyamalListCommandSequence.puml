@@ -6,25 +6,38 @@ participant ":Parser" as P
 participant "c:ListCommand" as LC
 participant ":ApplicationList" as AL
 
-User -> UI : types "list"
 IT -> UI : readCommand()
+activate UI
+User -> UI : types "list"
 UI --> IT : "list"
-IT -> P : parse("list")
-P --> IT : c (ListCommand)
-IT -> LC : execute(applications, ui, storage)
-LC -> AL : getSize()
-AL --> LC : size
+deactivate UI
 
-alt list is empty
-    LC -> UI : showMessage("No applications found.")
-else list has entries
-    LC -> UI : showMessage("Here are your internship applications:")
-    loop for each application (1 to size)
-        LC -> AL : getApplication(i)
-        AL --> LC : application
-        LC -> UI : showMessage(i + ". " + app.toString())
-    end
+activate IT
+IT -> P : parse("list")
+activate P
+P --> IT : c (ListCommand)
+deactivate P
+
+IT -> LC : execute(applications, ui, storage)
+activate LC
+
+LC -> AL : getApplication(i) for each entry
+activate AL
+AL --> LC : applications
+deactivate AL
+
+alt no active applications
+    LC -> UI : showMessage("No applications found. Start adding some!")
+    activate UI
+    UI --> User : displays output
+    deactivate UI
+else has active applications
+    LC -> UI : showMessage(formatted application list)
+    activate UI
+    UI --> User : displays list with notes
+    deactivate UI
 end
 
-UI --> User : displays output
+deactivate LC
+deactivate IT
 @enduml

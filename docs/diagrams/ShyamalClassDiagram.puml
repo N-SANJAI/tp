@@ -3,21 +3,31 @@ class Application {
     - company: String
     - role: String
     - status: String
-    - note: String
+    - contactName: String
+    - contactEmail: String
     - salary: Double
-    - deadlines: DeadlineList
-    + getNote(): String
+    - note: String
+    - isArchived: boolean
     + setNote(note: String): void
+    + getNote(): String
+    + setArchived(isArchived: boolean): void
+    + isArchived(): boolean
+    + isSameApplication(other: Application): boolean
     + toStorageString(): String
 }
 
 class ApplicationList {
-    - applications: ArrayList<Application>
     + addApplication(app: Application): void
     + deleteApplication(index: int): void
     + getApplication(index: int): Application
+    + getActiveApplication(displayIndex: int): Application
+    + getArchivedApplication(displayIndex: int): Application
     + getApplications(): List<Application>
+    + hasApplication(toCheck: Application): boolean
+    + countActive(): int
+    + countArchived(): int
     + getSize(): int
+    + clear(): void
 }
 
 class Storage {

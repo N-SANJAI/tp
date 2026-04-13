@@ -8,18 +8,51 @@ participant ":ApplicationList" as AL
 participant ":Application" as A
 participant ":Storage" as S
 
-User -> UI : types "note 1 n/Strong Java skills"
 IT -> UI : readCommand()
+activate UI
+User -> UI : types "note 1 n/Strong Java skills"
 UI --> IT : "note 1 n/Strong Java skills"
+deactivate UI
+
+activate IT
 IT -> P : parse("note 1 n/Strong Java skills")
+activate P
 P --> IT : c (NoteCommand)
+deactivate P
+
 IT -> NC : execute(applications, ui, storage)
-NC -> AL : getApplication(1)
+activate NC
+
+NC -> AL : getActiveApplication(1)
+activate AL
 AL --> NC : application
+deactivate AL
+
 NC -> A : setNote("Strong Java skills")
+activate A
 A --> NC : done
-NC -> S : save(applications)
+deactivate A
+
+NC -> AL : getApplications()
+activate AL
+AL --> NC : List<Application>
+deactivate AL
+
+NC -> S : save(List<Application>)
+activate S
 S --> NC : done
-NC -> UI : showMessage("Note updated for: ...")
+deactivate S
+
+NC -> UI : showMessage("Note updated for: Google | SWE Intern")
+activate UI
 UI --> User : displays confirmation
+deactivate UI
+
+NC -> UI : showMessage("  Note: Strong Java skills")
+activate UI
+UI --> User : displays note
+deactivate UI
+
+deactivate NC
+deactivate IT
 @enduml
