@@ -351,15 +351,17 @@ The `deadline done` command marks a specific deadline as completed.
 When `DeadlineDoneCommand#execute()` is called:
 
 1. Validates application index
-2. Retrieves `Application`
+2. Retrieves active `Application` from `ApplicationList`
 3. Retrieves `DeadlineList`
 4. Validates deadline index
-5. Calls `setDone()`
-6. Calls `Storage#save()`
+5. Retrieves the target `Deadline`
+6. Verifies that the deadline is not already marked as done
+7. Calls `setDone()`
+8. Displays confirmation messages via `Ui`
+9. Calls `Storage#save()`
 
 The sequence diagram below shows two-level validation before mutation:
-
-![Deadline Done Sequence Diagram](images/EugeniaDeadlineDoneCommandSequence.png)
+![Deadline Done Command Sequence Diagram](images/EugeniaDeadlineDoneCommandSequence.png)
 
 **4.2 Parsing Logic**
 
