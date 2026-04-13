@@ -348,6 +348,29 @@ public class Application {
     }
 
     /**
+     * Returns a summary string representation of this application, showing the count
+     * of deadlines instead of listing them all out. Useful for list commands.
+     *
+     * @return A summarized human-readable string.
+     */
+    public String toSummaryString() {
+        String contactNameStr = (this.contactName == null) ? "-" : this.contactName;
+        String contactEmailStr = (this.contactEmail == null) ? "-" : this.contactEmail;
+        String salaryStr = (this.salary == null) ? "-" : String.format("$%.2f", this.salary);
+
+        int deadlineCount = (deadlines != null) ? deadlines.getSize() : 0;
+        String deadlinesStr = deadlineCount + (deadlineCount == 1 ? " deadline" : " deadlines");
+
+        return "Company: " + company +
+                " | Role: " + role +
+                " | Status: " + status +
+                " | Salary: " + salaryStr +
+                " | Contact Name: " + contactNameStr +
+                " | Contact Email: " + contactEmailStr +
+                " | Deadlines: " + deadlinesStr;
+    }
+
+    /**
      * Returns a pipe-delimited string for saving to the storage file.
      *
      * @return A storage-formatted string.
