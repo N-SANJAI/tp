@@ -179,7 +179,7 @@ To handle applications accumulating large numbers of deadlines without clutterin
 
 ---
 
-#### 1. Deadline Model Design
+### 1. Deadline Model Design
 
 The deadline feature is built on a model where each `Application` owns a `DeadlineList`,
 which contains multiple `Deadline` objects.
@@ -188,7 +188,7 @@ The diagram below shows the ownership structure and encapsulation of deadlines:
 
 ![Deadline Class Diagram](images/EugeniaClassDiagram.png)
 
-**1.1 Evolution of Design**
+#### 1.1 Evolution of Design
 
 **Iteration 1 (v1.0): Single deadline per application**
 
@@ -218,7 +218,7 @@ The diagram below shows the ownership structure and encapsulation of deadlines:
 **Reasoning:**
 A list-based design better models real internship workflows and allows future extensions.
 
-**1.2 Model Constraints**
+#### 1.2 Model Constraints
 
 - `deadlineType` must not be null or blank
 - `dueDate` must not be null
@@ -229,11 +229,54 @@ A list-based design better models real internship workflows and allows future ex
 
 ---
 
-#### 2. Deadline Add Feature
+### 2. Deadline Parser Design
+
+The `deadline` command uses a dedicated `DeadlineCommandParser` to handle all
+deadline-related subcommands (`add`, `list`, `done`).
+
+Unlike other commands that may use separate parser classes, all deadline parsing
+logic is centralised within a single parser to handle subcommand dispatching.
+
+#### 2.1 Parsing Flow
+
+When the user inputs a `deadline` command:
+
+1. The main `Parser` identifies the `deadline` keyword
+2. Control is delegated to `DeadlineCommandParser`
+3. The parser extracts the subcommand (`add`, `list`, `done`)
+4. Based on the subcommand:
+    - `add` → constructs `DeadlineAddCommand`
+    - `list` → constructs `DeadlineListCommand`
+    - `done` → constructs `DeadlineDoneCommand`
+5. Arguments are validated before command construction (fail-fast)
+
+This ensures that only valid command objects are created and executed.
+
+#### 2.2 Design Considerations
+
+**Aspect: Single parser vs multiple parsers for deadline subcommands**
+
+* **Alternative 1:** Separate parser classes for each subcommand
+    + Pros: Better separation of concerns
+    + Cons: Increased number of classes and boilerplate code
+
+* **Alternative 2 (Current Choice):** Single `DeadlineCommandParser`
+    + Pros: Centralised parsing logic for all deadline-related operations
+    + Cons: Slightly larger parser class
+
++ **Reasoning:**  
+  All deadline commands share a common prefix (`deadline`), making them
+  conceptually grouped. Centralising parsing avoids unnecessary fragmentation
+  while maintaining readability, as subcommands (`add`, `list`, `done`)
+  are closely related in behaviour.
+
+---
+
+### 3. Deadline Add Feature
 
 The `deadline add` command allows users to attach a new deadline to an application.
 
-**2.1 Implementation**
+#### 3.1 Implementation
 
 When `DeadlineAddCommand#execute()` is called:
 
@@ -248,7 +291,7 @@ The sequence diagram below shows validation occurring before any model mutation:
 
 ![Deadline Add Command Sequence Diagram](images/EugeniaDeadlineAddCommandSequence.png)
 
-**2.2 Parsing Logic**
+#### 3.2 Parsing Logic
 
 The parser performs the following checks:
 
@@ -258,7 +301,7 @@ The parser performs the following checks:
 4. Parses index as a positive integer
 5. Validates date format (`DD-MM-YYYY`)
 
-**2.3 Design Considerations**
+#### 3.3 Design Considerations
 
 **Aspect: Overwrite vs append behaviour**
 
@@ -290,11 +333,11 @@ The parser performs the following checks:
 
 ---
 
-#### 3. Deadline List Feature
+### 4. Deadline List Feature
 
 The `deadline list` command displays all deadlines for a given application.
 
-**3.1 Implementation**
+#### 4.1 Implementation
 
 When `DeadlineListCommand#execute()` is called:
 
@@ -310,7 +353,7 @@ The sequence diagram below shows the read-only flow of the `deadline list` comma
 
 ![Deadline List Command Sequence Diagram](images/EugeniaDeadlineListCommandSequence.png)
 
-**3.2 Parsing Logic**
+#### 4.2 Parsing Logic
 
 The parser performs the following checks:
 
@@ -319,7 +362,7 @@ The parser performs the following checks:
 3. Parses index as numeric
 4. Ensures index is positive
 
-**3.3 Design Considerations**
+#### 4.3 Design Considerations
 
 **Aspect: Inline display vs dedicated command**
 
@@ -345,11 +388,11 @@ The parser performs the following checks:
 
 ---
 
-#### 4. Deadline Done Feature
+### 5. Deadline Done Feature
 
 The `deadline done` command marks a specific deadline as completed.
 
-**4.1 Implementation**
+#### 5.1 Implementation
 
 When `DeadlineDoneCommand#execute()` is called:
 
@@ -366,7 +409,7 @@ When `DeadlineDoneCommand#execute()` is called:
 The sequence diagram below shows two-level validation before mutation:
 ![Deadline Done Command Sequence Diagram](images/EugeniaDeadlineDoneCommandSequence.png)
 
-**4.2 Parsing Logic**
+#### 5.2 Parsing Logic
 
 The parser performs the following checks:
 
@@ -376,7 +419,7 @@ The parser performs the following checks:
 4. Rejects unknown subcommands
 5. Ensures both indices are numeric and positive
 
-**4.3 Design Considerations**
+#### 5.3 Design Considerations
 
 **Aspect: Indexing strategy**
 
@@ -408,9 +451,9 @@ The parser performs the following checks:
 
 ---
 
-#### 5. Display Design
+### 6. Display Design
 
-**5.1 `null` vs `-`**
+#### 6.1 `null` vs `-`
 
 **Earlier design:**
 - Displayed `null`
