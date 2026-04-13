@@ -104,8 +104,56 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 
 ![Help Command Sequence Diagram](images/SanjaiHelpCommandSequence.png)
 
+#### 7. Advanced Deadline Management (Undone & Delete)
 
-#### 8. Design Considerations
+The application’s deadline capabilities were expanded to allow users to fully manage the state of their tasks by unmarking completed deadlines or deleting them entirely.
+
+**Implementation Details:**
+
+1. The `DeadlineCommandParser` was updated to securely parse the `undone` and `delete` subcommands, intercepting invalid (non-numerical) indices and preventing Java stack trace leaks (`NumberFormatException`).
+2. `DeadlineUndoneCommand` and `DeadlineDeleteCommand` execute by first resolving the active application, then retrieving its `DeadlineList`.
+3. Strict bounds-checking is performed on both the application index and the deadline index.
+4. For `undone`, the command checks if the deadline is *already* incomplete. If so, it throws an `InternTrackrException` to prevent redundant operations and unnecessary disk writes. Otherwise, it updates the state and invokes `Storage#save()`.
+5. For `delete`, the command removes the specific deadline from the internal `DeadlineList` and triggers a save.
+
+#### 8. Strict Date Validation
+
+To ensure data integrity for internship timelines, the date parsing logic for deadlines was overhauled to prevent silent mutations of invalid dates.
+
+**Implementation Details:**
+
+By default, Java's `DateTimeFormatter` uses `ResolverStyle.SMART`, which silently auto-corrects invalid dates (e.g., automatically converting `31-02-2026` to `28-02-2026`).
+
+1. The parser was upgraded to use `ResolverStyle.STRICT` alongside the `uuuu` year format.
+2. Additional logic was injected to explicitly evaluate `dueDate.isBefore(LocalDate.now())`.
+3. If a user inputs a non-existent calendar date (like Feb 29th on a non-leap year) or a past date, the parser immediately catches it and throws an `InternTrackrException`.
+
+#### 9. UI List Summary Abstraction (`toSummaryString`)
+
+To handle applications accumulating large numbers of deadlines without cluttering the CLI, a new output abstraction was introduced for list-based commands.
+
+**Implementation Details:**
+
+1. A new `toSummaryString()` method was implemented within the `Application` model.
+2. Instead of relying on `toString()`—which outputs the raw string representations of all attached `Deadline` objects—`toSummaryString()` dynamically calculates `deadlines.getSize()`.
+3. It formats the output cleanly (e.g., `Deadlines: 0 deadlines` or `Deadlines: 2 deadlines`).
+4. This abstraction was integrated across `ListCommand`, `ListArchiveCommand`, `FilterCommand`, and `FindCommand` to ensure UI consistency across all list views.
+
+#### 10. Design Considerations
+
+**Aspect: Handling Date Validation for Deadlines**
+* **Alternative 1:** Use default `SMART` date parsing.
+  * *Pros:* Requires less code and avoids crashing on minor user typos.
+  * *Cons:* Causes silent data mutation. If a user accidentally types `31-11-2026`, it saves as `30-11-2026` without warning them, which could lead to missed deadlines.
+* **Alternative 2 (Current Choice):** Enforce `STRICT` date parsing and reject past dates.
+  * *Reasoning:* Strict validation forces the user to confront typos immediately. In the context of internship hunting, date accuracy is critical, so failing loudly is much safer than failing silently.
+
+**Aspect: Unmarking a Deadline**
+* **Alternative 1:** Fail silently if the user tries to mark an already incomplete deadline as undone.
+  * *Pros:* Simpler logic.
+  * *Cons:* Triggers an unnecessary `Storage#save()` operation for a state that hasn't changed.
+* **Alternative 2 (Current Choice):** Throw an exception if the deadline is already undone.
+  * *Reasoning:* Provides explicit feedback to the user about the actual state of their tracker and optimizes performance by skipping the disk write.
 
 **Aspect: Handling an empty application list during `overview`**
 
@@ -893,27 +941,29 @@ Reduces missed deadlines and confusion caused by scattered notes, emails, and me
 
 ## User Stories
 
-| Version | As a ... | I want to ...                                                    | So that I can ...                                                           |
-|---------|----------|------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| v1.0    | student  | add a new internship application (company, role)                 | start tracking my progress and keep records in one place                    |
-| v1.0    | user     | delete an application                                            | remove entries made in error or that are no longer relevant                 |
-| v1.0    | user     | view a list of all applications                                  | see my entire job hunt at a glance                                          |
-| v1.0    | user     | edit/update an application status (e.g., Applied → Interview)    | keep my records accurate and see my current progress                        |
-| v1.0    | user     | filter applications by status                                    | identify which companies are waiting on me (e.g., "Pending OA")             |
-| v1.0    | student  | add deadlines (OAs, submission dates, offer expiries)            | avoid missing critical windows and stay on schedule                         |
-| v1.0    | user     | mark a deadline task as done                                     | track completed tasks and maintain my schedule                              |
-| v1.0    | user     | view a summary of my application statuses and upcoming deadlines | quickly assess my overall progress and prioritize what needs attention next |
-| v2.0    | user     | clear all data                                                   | reset the app for a new semester or application cycle                       |
-| v2.0    | student  | detect and prevent duplicate applications                        | avoid making professional mistakes with companies                           |
-| v2.0    | user     | see total application counts broken down by status               | track if I am meeting my weekly application quotas                          |
-| v2.0    | user     | use a `help` command                                             | learn how to use the tool without needing external documentation            |
-| v2.0    | user     | archive rejected applications                                    | keep a history of outcomes without cluttering the active view               |
-| v2.0    | student  | add salary and benefit information to an offer                   | compare compensation packages and make informed decisions                   |
-| v2.0    | user     | add recruiter contact information to an application              | easily find who to contact for follow-ups                                   |
-| v2.0    | user     | add notes to an application                                      | jot down interview thoughts or tech stack requirements                      |
-| v2.0    | user     | view all deadlines sorted by date                                | see which deadline is approaching next                                      |
-| v2.0    | user     | search for an application by company name                        | find specific details quickly without scrolling through the entire list     |
-| v2.0    | user     | add recruiter contact information/email to an application        | find who to contact for follow-ups.                                         |
+| Version | As a ... | I want to ...                                                    | So that I can ...                                                              |
+|---------|----------|------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| v1.0    | student  | add a new internship application (company, role)                 | start tracking my progress and keep records in one place                       |
+| v1.0    | user     | delete an application                                            | remove entries made in error or that are no longer relevant                    |
+| v1.0    | user     | view a list of all applications                                  | see my entire job hunt at a glance                                             |
+| v1.0    | user     | edit/update an application status (e.g., Applied → Interview)    | keep my records accurate and see my current progress                           |
+| v1.0    | user     | filter applications by status                                    | identify which companies are waiting on me (e.g., "Pending OA")                |
+| v1.0    | student  | add deadlines (OAs, submission dates, offer expiries)            | avoid missing critical windows and stay on schedule                            |
+| v1.0    | user     | mark a deadline task as done                                     | track completed tasks and maintain my schedule                                 |
+| v1.0    | user     | view a summary of my application statuses and upcoming deadlines | quickly assess my overall progress and prioritize what needs attention next    |
+| v2.0    | user     | clear all data                                                   | reset the app for a new semester or application cycle                          |
+| v2.0    | student  | detect and prevent duplicate applications                        | avoid making professional mistakes with companies                              |
+| v2.0    | user     | see total application counts broken down by status               | track if I am meeting my weekly application quotas                             |
+| v2.0    | user     | use a `help` command                                             | learn how to use the tool without needing external documentation               |
+| v2.0    | user     | archive rejected applications                                    | keep a history of outcomes without cluttering the active view                  |
+| v2.0    | student  | add salary and benefit information to an offer                   | compare compensation packages and make informed decisions                      |
+| v2.0    | user     | add recruiter contact information to an application              | easily find who to contact for follow-ups                                      |
+| v2.0    | user     | add notes to an application                                      | jot down interview thoughts or tech stack requirements                         |
+| v2.0    | user     | view all deadlines sorted by date                                | see which deadline is approaching next                                         |
+| v2.0    | user     | search for an application by company name                        | find specific details quickly without scrolling through the entire list        |
+| v2.0    | user     | add recruiter contact information/email to an application        | find who to contact for follow-ups.                                            |
+| v2.1    | user     | mark a completed deadline as undone                              | fix mistakes if I accidentally marked a task as done                           |
+| v2.1    | user     | delete a deadline                                                | completely remove cancelled interviews or OAs without deleting the application |
 
 ## Non-Functional Requirements
 
@@ -946,7 +996,7 @@ Given below are instructions to test the app manually.
 
 ```bash
 java -jar internTrackr.jar
-```
+````
 
 **Expected:** You should see the welcome message:
 
@@ -975,10 +1025,10 @@ To test features like filtering, archiving, and overviews without manually typin
 3. Replace the contents of the file with the following valid data strings:
 
 ```text
-Google | Software Engineer Intern | Applied | - | - | - | Leetcode Hard expected
+Google | Software Engineer Intern | Applied | - | - | - | Leetcode Hard
 Meta | Data Scientist | Interview | - | - | - | - | OA | 2026-10-12 | true
 Netflix | Backend Intern | Rejected | - | - | - | - | archived:true
-TikTok | iOS Engineer | Offered | Jane Tan | jane@tiktok.com | 6500.0 | Great benefits
+TikTok | iOS Engineer | Offered | Jane Tan | jane@tiktok.com | 6500.0 | -
 Apple | Hardware Intern | Pending | - | - | - | -
 ```
 
@@ -1131,6 +1181,22 @@ deadline done 2 i/2
 ```
 
 **Expected:** Marks the `"Tech Round"` deadline as completed `[X]`.
+
+**Test:**
+
+```text
+deadline undone 2 i/2
+```
+
+**Expected:** Marks the `"Tech Round"` deadline back to incomplete `[ ]`.
+
+**Test:**
+
+```text
+deadline delete 2 i/2
+```
+
+**Expected:** Completely removes the `"Tech Round"` deadline from Meta. Running `deadline list 2` immediately after should now only show 2 deadlines.
 
 ### 4. Testing Error and Data Corruption Handling
 
