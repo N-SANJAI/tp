@@ -39,7 +39,7 @@ Refer to the [Features](#features) section below for details.
 > - Items in square brackets are optional.
     >   - Example: `deadline add ID t/TYPE d/DATE [n/NOTES]`
 > - Parameters can be in any order unless stated otherwise.
-> - For fields containing spaces, wrap them in quotes `"..."`.
+> - For fields containing spaces, you may optionally wrap them in quotes `"..."` for clarity.
 > - Dates use the format `DD-MM-YYYY`.
 > - **CRITICAL:** Do not use the pipe character (`|`) anywhere in your inputs. It is strictly prohibited and will cause an error.
 > - Extra parameters for commands that do not take parameters (such as `help`, `overview`, `exit`) will be ignored.
@@ -59,6 +59,7 @@ Adds an internship application.
 - Creates a new application with the given company and role.
 - Prefixes can be provided in any order.
 - Duplicate applications are not allowed.
+- The count shown in the confirmation message reflects only active (non-archived) applications.
 
 **Examples:**
 
@@ -373,7 +374,7 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 | Clear filter                 | `filter clear`                               | `filter clear`                                          |
 | Add deadline                 | `deadline add INDEX t/TYPE d/DATE [n/NOTES]` | `deadline add 1 t/Submission d/01-03-2026 n/Need to reply by email` |
 | List deadlines               | `deadline list INDEX`                        | `deadline list 1`                                       |
-| Mark deadline as done        | `deadline done INDEX i/DEADLINE_INDEX`       | `deadline done INDEX i/DEADLINE_INDEX`                  |
+| Mark deadline as done        | `deadline done INDEX i/DEADLINE_INDEX`       | `deadline done 1 i/2`                                   |
 | Overview                     | `overview`                                   | `overview`                                              |
 | Clear all data               | `clear`                                      | `clear`                                                 |
 | Exit                         | `exit`                                       | `exit`                                                  |
