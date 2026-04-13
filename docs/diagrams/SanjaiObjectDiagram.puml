@@ -1,0 +1,32 @@
+@startuml
+object "applicationList:ApplicationList" as AL {
+    size = 3
+}
+
+object "app1:Application" as A1 {
+    company = "Shopee"
+    role = "Backend Intern"
+    status = "Applied"
+    isArchived = false
+}
+
+object "app2:Application" as A2 {
+    company = "Grab"
+    role = "Data Analyst"
+    status = "Interview"
+    isArchived = false
+}
+
+object "app3:Application" as A3 {
+    company = "Meta"
+    role = "SWE Intern"
+    status = "Applied"
+    isArchived = true
+}
+
+AL --> A1
+AL --> A2
+AL --> A3
+
+note right of A3 : Excluded from Active Status\nBreakdown (isArchived = true)
+@enduml
