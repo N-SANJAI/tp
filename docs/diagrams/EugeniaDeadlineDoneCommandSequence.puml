@@ -1,0 +1,55 @@
+@startuml
+actor User
+participant ":Parser" as P
+participant ":DeadlineCommandParser" as DCP
+participant "ddc:DeadlineDoneCommand" as DDC
+participant ":ApplicationList" as AL
+participant "app:Application" as APP
+participant "dl:DeadlineList" as DL
+participant "d:Deadline" as D
+participant ":Ui" as UI
+participant ":Storage" as S
+
+User -> P : parse("deadline done 2 i/2")
+P -> DCP : parse("done 2 i/2")
+DCP -> DDC : <<create>>
+DCP --> P : ddc
+
+User -> DDC : execute(applications, ui, storage)
+
+DDC -> AL : countActive()
+AL --> DDC : activeCount
+
+alt invalid application index
+    DDC --> User : throws InternTrackrException
+else valid application index
+    DDC -> AL : getActiveApplication(applicationIndex)
+    AL --> DDC : app
+    DDC -> APP : getDeadlines()
+    APP --> DDC : dl
+    DDC -> DL : getSize()
+    DL --> DDC : deadlineCount
+
+    alt invalid deadline index
+        DDC --> User : throws InternTrackrException
+    else valid deadline index
+        DDC -> DL : getDeadline(deadlineIndex)
+        DL --> DDC : d
+        DDC -> D : getIsDone()
+        D --> DDC : isDone
+
+        alt deadline already done
+            DDC --> User : throws InternTrackrException
+        else deadline not done
+            DDC -> D : setDone()
+            DDC -> UI : showMessage("Nice! Marked this deadline as done:")
+            DDC -> D : toString()
+            D --> DDC : formattedDeadline
+            DDC -> UI : showMessage(deadlineIndex + ". " + formattedDeadline)
+            DDC -> AL : getApplications()
+            AL --> DDC : applications
+            DDC -> S : save(applications)
+        end
+    end
+end
+@enduml
