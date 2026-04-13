@@ -294,7 +294,7 @@ ____________________________________________________________
 ____________________________________________________________
 Overview:
 You are currently tracking 6 application(s) in total (5 active, 1 archived).
-Status Breakdown:
+Active Status Breakdown:
  - Applied: 2
  - Offered: 1
  - Rejected: 1
