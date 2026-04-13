@@ -151,6 +151,12 @@ each with its own deadline. Supporting multiple deadlines improves realism and e
 * **Alternative 2 (Current Choice):** Pass `null` for `Storage` when calling read-only commands.
 * **Reasoning:** Since `OverviewCommand` and `HelpCommand` never write anything, giving them a live `Storage` reference risks accidental side effects. Passing `null` (guarded by `assert` statements) keeps the execution lightweight and the intent clear.
 
+**Aspect: Passing dependencies to read-only commands (`Overview`, `Help`)**
+
+* **Alternative 1:** Pass a valid `Storage` object to every command for consistency.
+* **Alternative 2 (Current Choice):** Pass `null` for `Storage` when calling read-only commands.
+* **Reasoning:** Since `OverviewCommand` and `HelpCommand` never write anything, giving them a live `Storage` reference risks accidental side effects. Passing `null` (guarded by `assert` statements) keeps the execution lightweight and the intent clear.
+
 ---
 
 <!-- @@author Shyamal -->
