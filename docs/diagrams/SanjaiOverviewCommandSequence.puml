@@ -1,35 +1,59 @@
 @startuml
 actor User
-participant ":Ui" as UI
 participant ":InternTrackr" as IT
+participant ":Ui" as UI
 participant ":Parser" as P
 participant "c:OverviewCommand" as OC
 participant ":ApplicationList" as AL
 participant "app:Application" as App
 
+IT -> UI : readCommand()
+activate UI
 User -> UI : types "overview"
-UI -> IT : readCommand()
-IT --> UI : "overview"
+UI --> IT : "overview"
+deactivate UI
+
 IT -> P : parse("overview")
+activate P
 P --> IT : c (OverviewCommand)
+deactivate P
 
 IT -> OC : execute(applications, ui, storage)
+activate OC
 
 OC -> AL : getSize()
+activate AL
 AL --> OC : size
+deactivate AL
 
 OC -> AL : getApplications()
+activate AL
 AL --> OC : list
+deactivate AL
 
 loop for each app in list
-    OC -> App : getStatus()
-    App --> OC : status
+    OC -> App : isArchived()
+    activate App
+    App --> OC : boolean
+    deactivate App
+    alt not archived
+        OC -> App : getStatus()
+        activate App
+        App --> OC : status
+        deactivate App
+    end
 end
 
-OC -> UI : showMessage(summary messages)
+OC -> UI : showMessage(summary and active status breakdown)
+activate UI
 UI --> OC
+deactivate UI
 
 OC --> IT
+deactivate OC
+
 IT -> UI : showLine()
+activate UI
 UI -> User : displays output
+deactivate UI
 @enduml
