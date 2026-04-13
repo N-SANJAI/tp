@@ -1,0 +1,38 @@
+@startuml
+
+object "app1:Application" as app1 {
+  company = "Meta"
+  role = "Data Scientist"
+}
+
+object "dl1:DeadlineList" as dl1
+
+object "d1:Deadline" as d1 {
+  deadlineType = "OA"
+  dueDate = 2026-10-12
+  isDone = true
+}
+
+object "d2:Deadline" as d2 {
+  deadlineType = "Tech Round"
+  dueDate = 2026-11-01
+  isDone = false
+}
+
+app1 --> dl1
+dl1 --> d1
+dl1 --> d2
+
+note right of d1
+Already marked as done
+end note
+
+note right of d2
+Pending deadline
+end note
+
+note bottom of dl1
+Multiple deadlines stored per application
+end note
+
+@enduml
