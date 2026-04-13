@@ -299,13 +299,16 @@ The `deadline list` command displays all deadlines for a given application.
 When `DeadlineListCommand#execute()` is called:
 
 1. Validates application index
-2. Retrieves `Application`
-3. Retrieves deadlines
-4. Displays via `Ui`
+2. Retrieves active `Application` from `ApplicationList`
+3. Retrieves `DeadlineList`
+4. Checks whether the application has any deadlines
+5. Displays either:
+    - a message that no deadlines were found, or
+    - a header followed by each formatted deadline via `Ui`
 
-The sequence diagram below shows a read-only traversal of the model:
+The sequence diagram below shows the read-only flow of the `deadline list` command:
 
-![Deadline List Sequence Diagram](images/DeadlineListSequence.png)
+![Deadline List Command Sequence Diagram](images/EugeniaDeadlineListCommandSequence.png)
 
 **3.2 Parsing Logic**
 
