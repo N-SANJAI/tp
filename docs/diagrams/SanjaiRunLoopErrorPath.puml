@@ -4,11 +4,29 @@ participant ":Ui" as UI
 participant ":Parser" as P
 
 IT -> UI : readCommand()
+activate UI
 UI --> IT : fullCommand
+deactivate UI
+
 IT -> UI : showLine()
+activate UI
+UI --> IT
+deactivate UI
+
 IT -> P : parse(fullCommand)
+activate P
 P --> IT : throws InternTrackrException
+deactivate P
+
 IT -> UI : showError(message)
+activate UI
+UI --> IT
+deactivate UI
+
 IT -> UI : showLine()
+activate UI
+UI --> IT
+deactivate UI
+
 note right of IT : loop continues;\nno crash
 @enduml

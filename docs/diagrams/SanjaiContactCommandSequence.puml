@@ -1,37 +1,52 @@
 @startuml
 actor User
-participant ":Ui" as UI
 participant ":InternTrackr" as IT
+participant ":Ui" as UI
 participant ":Parser" as P
 participant "c:ContactCommand" as CC
 participant ":ApplicationList" as AL
 participant "app:Application" as App
 participant ":Storage" as S
 
+IT -> UI : readCommand()
+activate UI
 User -> UI : types "contact 1 c/HR e/hr@company.com"
-UI -> IT : readCommand()
-IT --> UI : "contact 1 c/HR e/hr@company.com"
+UI --> IT : "contact 1 c/HR e/hr@company.com"
+deactivate UI
+
 IT -> P : parse("contact 1 ...")
+activate P
 P --> IT : c (ContactCommand)
+deactivate P
 
 IT -> CC : execute(applications, ui, storage)
+activate CC
 
-CC -> AL : getApplication(1)
+CC -> AL : getActiveApplication(1)
+activate AL
 AL --> CC : app
+deactivate AL
 
-CC -> App : setContactName("HR")
+CC -> App : setContactDetails("HR", "hr@company.com")
+activate App
 App --> CC
+deactivate App
 
-CC -> App : setContactEmail("hr@company.com")
-App --> CC
-
-CC -> UI : showMessage(success messages)
+CC -> UI : showMessage(success message)
+activate UI
 UI --> CC
+deactivate UI
 
 CC -> S : save(list)
+activate S
 S --> CC
+deactivate S
 
 CC --> IT
+deactivate CC
+
 IT -> UI : showLine()
+activate UI
 UI -> User : displays output
+deactivate UI
 @enduml

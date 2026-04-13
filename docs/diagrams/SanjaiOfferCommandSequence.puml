@@ -1,37 +1,64 @@
 @startuml
 actor User
-participant ":Ui" as UI
 participant ":InternTrackr" as IT
+participant ":Ui" as UI
 participant ":Parser" as P
 participant "c:OfferCommand" as OC
 participant ":ApplicationList" as AL
 participant "app:Application" as App
 participant ":Storage" as S
 
-User -> UI : types "offer 1 5000"
-UI -> IT : readCommand()
-IT --> UI : "offer 1 5000"
-IT -> P : parse("offer 1 5000")
+IT -> UI : readCommand()
+activate UI
+User -> UI : types "offer 1 s/5000"
+UI --> IT : "offer 1 s/5000"
+deactivate UI
+
+IT -> P : parse("offer 1 s/5000")
+activate P
 P --> IT : c (OfferCommand)
+deactivate P
 
 IT -> OC : execute(applications, ui, storage)
+activate OC
 
-OC -> AL : getApplication(1)
+OC -> AL : getActiveApplication(1)
+activate AL
 AL --> OC : app
+deactivate AL
 
-OC -> App : setSalary(5000)
+OC -> App : setSalary(5000.0)
+activate App
 App --> OC
+deactivate App
 
-OC -> App : setStatus("Offered")
-App --> OC
+OC -> App : getStatus()
+activate App
+App --> OC : previousStatus
+deactivate App
+
+alt status is not "Offered"
+    OC -> App : setStatus("Offered")
+    activate App
+    App --> OC
+    deactivate App
+end
 
 OC -> UI : showMessage(success messages)
+activate UI
 UI --> OC
+deactivate UI
 
 OC -> S : save(list)
+activate S
 S --> OC
+deactivate S
 
 OC --> IT
+deactivate OC
+
 IT -> UI : showLine()
+activate UI
 UI -> User : displays output
+deactivate UI
 @enduml

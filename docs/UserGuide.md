@@ -50,6 +50,12 @@ Shows a message explaining how to access the full online User Guide.
 
 **Format:** `help`
 
+**Example output:**
+```
+Need help? You can view the full User Guide with all commands here:
+https://ay2526s2-cs2113-t14-1.github.io/tp/UserGuide.html
+```
+
 ### Adding an application : `add`
 
 Adds an internship application.
@@ -244,6 +250,9 @@ Filter cleared. Showing all applications:
 1. Company: Shopee | Role: Backend Intern | Status: Pending | ...
 2. Company: Grab | Role: Data Analyst Intern | Status: Offered | ...
 ```
+> **Note:** The `filter` command only affects the display. For all commands that take an `INDEX`
+> (e.g., `status`, `contact`, `offer`, `archive`), the index always corresponds to the position
+> shown in the default `list` output, not the filtered view.
 
 ### Finding applications : `find`
 
@@ -260,7 +269,7 @@ Finds applications whose company name or role contains the specified keyword.
 
 **Example output:**
 ```
-Here are the matching applications in your list:`
+Here are the matching applications in your list:
 1. Company: Shopee | Role: Backend Intern | Status: Applied | ...
 ```
 
@@ -330,8 +339,8 @@ Shows a quantitative summary of your internship applications and current statuse
 
 Overview includes:
 
-- Total number of tracked applications.
-- Count of applications broken down by their current status.
+- Total number of tracked applications (active and archived).
+- Count of active applications broken down by their current status.
 
 ### Clearing all data : `clear`
 

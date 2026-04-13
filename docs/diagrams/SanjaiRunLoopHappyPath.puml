@@ -6,14 +6,43 @@ participant "c:Command" as C
 participant ":Storage" as ST
 
 IT -> UI : readCommand()
+activate UI
 UI --> IT : fullCommand
+deactivate UI
+
 IT -> UI : showLine()
+activate UI
+UI --> IT
+deactivate UI
+
 IT -> P : parse(fullCommand)
+activate P
 P --> IT : c
+deactivate P
+
 IT -> C : execute(applications, ui, storage)
+activate C
+
 C -> UI : showMessage(...)
+activate UI
+UI --> C
+deactivate UI
+
 C -> ST : save(...) [if applicable]
+activate ST
+ST --> C
+deactivate ST
+
+C --> IT
+deactivate C
+
 IT -> C : isExit()
+activate C
 C --> IT : false
+deactivate C
+
 IT -> UI : showLine()
+activate UI
+UI --> IT
+deactivate UI
 @enduml

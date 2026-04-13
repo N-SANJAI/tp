@@ -5,15 +5,39 @@ participant ":Storage" as ST
 participant ":ApplicationList" as AL
 
 [-> IT : InternTrackr(filePath)
+activate IT
+
 IT -> UI : new Ui()
+activate UI
+UI --> IT
+deactivate UI
+
 IT -> ST : new Storage(filePath)
+activate ST
+ST --> IT
+deactivate ST
+
 IT -> ST : load()
+activate ST
 alt load successful
     ST --> IT : ArrayList<Application>
+    deactivate ST
     IT -> AL : new ApplicationList(list)
+    activate AL
+    AL --> IT
+    deactivate AL
 else InternTrackrException
     ST --> IT : throws InternTrackrException
+    deactivate ST
     IT -> UI : showLoadingError()
+    activate UI
+    UI --> IT
+    deactivate UI
     IT -> AL : new ApplicationList()
+    activate AL
+    AL --> IT
+    deactivate AL
 end
+
+deactivate IT
 @enduml

@@ -3,7 +3,7 @@
 ## Acknowledgements
 
 * **SE-EDU Initiative:** The overall architecture of this application (particularly the separation of `Ui`, `Parser`, `Storage`, and `Command` classes) was inspired by the [SE-EDU AddressBook-Level2 and Duke/ip projects](https://se-education.org/), created for software engineering education.
-* **Libraries:** This project relies solely on standard Java 11/17 libraries for core execution. [JUnit 5](https://junit.org/junit5/) is used for automated unit testing.
+* **Libraries:** Libraries: This project relies solely on standard Java 17 libraries for core execution. [JUnit 5](https://junit.org/junit5/) is used for automated unit testing.
 
 ## Design & implementation
 
@@ -46,24 +46,24 @@ The `Ui` class owns all terminal interaction — nothing else in the app touches
 
 #### 3. Overview Feature Implementation
 
-The `overview` command gives users a quantitative snapshot of their internship applications, including a detailed analytics breakdown by stage.
+The `overview` command gives users a quantitative snapshot of their internship applications, including a detailed breakdown by stage for active applications.
 
 **Implementation Details:**
 
 The feature is handled by `OverviewCommand`, which extends the abstract `Command` class. Here's what happens when it runs:
 
-1. It queries `ApplicationList` for the current application count.
-2. It iterates through the list, aggregating the frequencies of each application state (e.g., Applied, Pending) using a `LinkedHashMap` to maintain order based on `Application.VALID_STATUSES`.
-3. It passes this data to `Ui` to format and display the analytics summary.
-4. Since it's a read-only operation, it never touches `Storage`.
+1. It queries `ApplicationList` for the current application count (including archived).
+2. It iterates through the list, skipping archived applications, and aggregates the frequency of each status using a `LinkedHashMap` to maintain the order defined by `Application.VALID_STATUSES`.
+3. It passes the active-only counts to `Ui` under the heading **"Active Status Breakdown"**, making it clear that archived applications are intentionally excluded from the breakdown.
+4. Since it is a read-only operation, it never writes to `Storage`.
 
 ![Overview Command Sequence Diagram](images/SanjaiOverviewCommandSequence.png)
 
-**End-to-End Execution:**
+**Runtime State Snapshot:**
 
-The diagram below shows the full flow — from the user typing `overview` all the way to the output appearing on screen.
+The object diagram below shows a representative runtime state when `overview` is run. `app3` is archived, so it is excluded from the Active Status Breakdown even though its `status` field is `"Applied"`. The breakdown correctly shows `Applied: 1, Interview: 1` rather than `Applied: 2`.
 
-![End-to-End Sequence Diagram](images/SanjaiEndToEndSequence.png)
+![Overview Object Diagram](images/SanjaiObjectDiagram.png)
 
 #### 4. Offer Feature Implementation
 
@@ -86,9 +86,11 @@ The `contact` command allows users to store recruiter details directly alongside
 **Implementation Details:**
 
 1. The command takes in the target index, the contact name (prefixed by `c/`), and the contact email (prefixed by `e/`).
-2. `ContactCommand#execute()` verifies the index bounds against the `ApplicationList`.
-3. It updates the internal state of the selected `Application` with the provided name and email.
+2. `ContactCommand#execute()` verifies the index bounds against the active (non-archived) applications.
+3. It updates the internal state of the selected `Application` with the provided name and email via `setContactDetails()`.
 4. `Storage#save()` is triggered immediately to ensure these networking details are securely written to disk and persist across sessions.
+
+**Note on INDEX:** The index always refers to the position shown in the default `list` output (active applications only). The `filter` command affects only the display — it does not alter the underlying list order or the indices used by commands such as `contact`, `status`, or `offer`.
 
 ![Contact Command Sequence Diagram](images/SanjaiContactCommandSequence.png)
 
@@ -102,40 +104,6 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 
 ![Help Command Sequence Diagram](images/SanjaiHelpCommandSequence.png)
 
-<!-- @@author -->
-<!-- @@author eugenia-cnl-lee -->
-#### 7. Deadline List Feature Implementation
-
-The `deadline list` command allows users to view all deadlines associated with a specific application.
-
-**Implementation Details:**
-
-1. The command takes in the target index.
-2. It retrieves the corresponding `Application` from `ApplicationList`.
-3. It accesses the application's associated deadlines.
-4. Each deadline is formatted and displayed via `Ui`.
-
-**Design Considerations**
-
-**Aspect: Supporting multiple deadlines per application**
-
-* **Alternative 1 (previous design):** Store a single `Deadline` in `Application`
-    * Pros: Simpler implementation
-    * Cons: Cannot support multiple deadlines per application
-
-* **Alternative 2 (Current Choice):** Introduce a `DeadlineList`
-    * Pros: Supports multiple deadlines and enables future features such as sorting and filtering
-    * Cons: Requires refactoring across model, storage, and commands
-
-* **Reasoning:** Internship applications often involve multiple stages (e.g. OA, interviews, offers),
-each with its own deadline. Supporting multiple deadlines improves realism and extensibility.
-
-**Notes**
-
-* Index validation ensures safe access to applications
-* If no deadlines exist, an appropriate message is shown to the user
-
-<!-- @@author -->
 
 #### 8. Design Considerations
 
@@ -147,11 +115,48 @@ each with its own deadline. Supporting multiple deadlines improves realism and e
 
 **Aspect: Passing dependencies to read-only commands (`Overview`, `Help`)**
 
-* **Alternative 1:** Pass a valid `Storage` object to every command for consistency.
-* **Alternative 2 (Current Choice):** Pass `null` for `Storage` when calling read-only commands.
-* **Reasoning:** Since `OverviewCommand` and `HelpCommand` never write anything, giving them a live `Storage` reference risks accidental side effects. Passing `null` (guarded by `assert` statements) keeps the execution lightweight and the intent clear.
+* **Alternative 1 (Current Choice):** Pass a valid `Storage` reference to every command for consistency.
+* **Reasoning:** Since all commands share the same `execute(ApplicationList, Ui, Storage)` interface, the main loop always passes `storage` uniformly. Read-only commands such as `OverviewCommand` and `HelpCommand` simply ignore the `storage` parameter. This keeps the main loop simple and avoids any special-casing based on command type.
 
+* **Alternative 2:** Pass `null` for `Storage` when calling read-only commands.
+* **Reasoning against:** Although read-only commands do not use `Storage`, passing `null` would require every call site to know which commands are "read-only", breaking the uniform command interface and risking `NullPointerException` if that assumption ever changes.
 ---
+<!-- @@author -->
+
+<!-- @@author eugenia-cnl-lee -->
+### Deadline Features
+
+**Author:** Eugenia
+
+The `deadline list` command allows users to view all deadlines associated with a specific application.
+
+#### Implementation Details
+
+1. The command takes in the target index.
+2. It retrieves the corresponding `Application` from `ApplicationList`.
+3. It accesses the application's associated deadlines.
+4. Each deadline is formatted and displayed via `Ui`.
+
+#### Design Considerations
+
+**Aspect: Supporting multiple deadlines per application**
+
+* **Alternative 1 (previous design):** Store a single `Deadline` in `Application`
+  * Pros: Simpler implementation
+  * Cons: Cannot support multiple deadlines per application
+
+* **Alternative 2 (Current Choice):** Introduce a `DeadlineList`
+  * Pros: Supports multiple deadlines and enables future features such as sorting and filtering
+  * Cons: Requires refactoring across model, storage, and commands
+
+* **Reasoning:** Internship applications often involve multiple stages (e.g. OA, interviews, offers), each with its own deadline. Supporting multiple deadlines improves realism and extensibility.
+
+#### Notes
+
+* Index validation ensures safe access to applications
+* If no deadlines exist, an appropriate message is shown to the user
+---
+<!-- @@author -->
 
 <!-- @@author Shyamal -->
 
@@ -339,8 +344,7 @@ The `NoteCommandParser#parse()` method processes the user input as follows:
 
 When `NoteCommand#execute()` is called:
 
-1. It uses `ApplicationList#getApplication()` to retrieve the target application,
-   which performs bounds checking automatically.
+1. It uses ApplicationList#getActiveApplication(index) to retrieve the target application, which performs bounds checking automatically against the active list.
 2. It calls `Application#setNote()` to update the note field, overwriting any
    previously stored note.
 3. It immediately calls `Storage#save()` to persist the note to disk.
@@ -468,7 +472,7 @@ The `StatusCommandParser#parse()` method breaks down the complex command string:
 **2.1.2 Execution Logic**
 The `StatusCommand#execute()` method follows a strict validation-then-update pipeline:
 1.  **Dependency Assertion**: Uses Java `assert` statements to ensure `ApplicationList`, `Ui`, and `Storage` are not null.
-2.  **Bounds Validation**: Checks if the provided index is greater than 0 and less than or equal to `applications.getSize()`. If out of bounds, it provides a user-friendly error message showing the valid range.
+2.  **Bounds Validation**: Checks if the provided index is greater than 0 and less than or equal to `applications.countActive()`. If out of bounds, it provides a user-friendly error message showing the valid range.
 3.  **Content Validation**: Rejects empty status strings and checks against the master list of valid statuses (Applied, Pending, etc.) via `Application#isValidStatus()`.
 4.  **The Update**: Retrieves the target `Application` object and updates its internal status field with the normalized string.
 5.  **Immediate Persistence**: Unlike read-only commands, this command immediately calls `storage.save()`. This ensures that the progress is saved to the hard drive instantly.
@@ -969,7 +973,7 @@ To test features like filtering, archiving, and overviews without manually typin
 
 ```text
 Google | Software Engineer Intern | Applied | - | - | - | Leetcode Hard expected
-Meta | Data Scientist | Interview | John Doe | john@meta.com | - | - | OA | 2026-10-12 | true | Tech Round | 2026-11-01 | false
+Meta | Data Scientist | Interview | - | - | - | - | OA | 2026-10-12 | true
 Netflix | Backend Intern | Rejected | - | - | - | - | archived:true
 TikTok | iOS Engineer | Offered | Jane Tan | jane@tiktok.com | 6500.0 | Great benefits
 Apple | Hardware Intern | Pending | - | - | - | -
@@ -1033,7 +1037,7 @@ note 1 n/Review OOP concepts
 overview
 ```
 
-**Expected:** Shows total tracked applications and a breakdown tally of statuses (e.g., `1 Applied`, `1 Pending`, etc.).
+**Expected:** Shows 5 total applications (4 active, 1 archived) and an Active Status Breakdown (e.g., `Interview: 2`, `Offered: 1`, `Pending: 1`).
 
 **Test:**
 
@@ -1077,7 +1081,7 @@ archive 1
 list archive
 ```
 
-**Expected:** Shows Google and Netflix.
+**Expected:** Shows Netflix and Google.
 
 **Test:**
 
@@ -1085,19 +1089,27 @@ list archive
 unarchive 2
 ```
 
-> Assuming Netflix is index 2 in the archive list.
+> Google is at index 2 in the archive list (Netflix is index 1).
 
-**Expected:** Netflix is restored to the active list view.
+**Expected:** Google is restored to the active list view.
 
 #### 3.4 Deadlines
 
 **Test:**
 
 ```text
-deadline list 2
+deadline add 2 t/Tech Round d/01-11-2026
 ```
 
 > Assuming Meta is at index 2 in the active list.
+
+**Expected:** Adds a `Tech Round` deadline to Meta.
+
+**Test:**
+
+```text
+deadline list 2
+```
 
 **Expected:** Lists the `"OA"` (`Done`) and `"Tech Round"` (`Not Done`) deadlines.
 

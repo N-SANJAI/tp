@@ -59,7 +59,7 @@ public class OverviewCommand extends Command {
                 }
             }
 
-            ui.showMessage("Status Breakdown:");
+            ui.showMessage("Active Status Breakdown:");
             boolean anyActive = false;
             for (Map.Entry<String, Integer> entry : statusCounts.entrySet()) {
                 if (entry.getValue() > 0) {

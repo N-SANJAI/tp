@@ -35,7 +35,8 @@
 * Designed and implemented an aggregation system that computes application counts by status
 * Used `LinkedHashMap` to maintain consistent status ordering (Applied → Pending → Interview → Offered → Rejected → Accepted)
 * Read-only command that queries `ApplicationList` without invoking `Storage`, demonstrating understanding of command side effects
-* Result: Users see job hunt momentum at a glance
+* Post-release fix: identified a UX ambiguity where archived applications were silently excluded from the status breakdown with no indication. Updated the output label to **"Active Status Breakdown"** and audited the filtering logic to confirm `isArchived()` is checked correctly before aggregating counts.
+* Result: Users see job hunt momentum at a glance, with a clear distinction between active and archived applications
 
 **3. Compensation Tracking (`offer` command)**
 * Implemented salary logging with automatic status normalization to "Offered"
@@ -51,29 +52,33 @@
 
 ### Contributions to the User Guide
 * Documented all four commands (`contact`, `offer`, `overview`, `help`) with clear format specifications and practical examples
-* Added usage notes clarifying constraints (e.g., contact name must precede email, salary max 2 decimals)
+* Added usage notes clarifying constraints (e.g., contact name must precede email, salary max 2 decimal places)
+* Added a clarifying note under the `filter` command specifying that it only affects the display - the `INDEX` for all commands always refers to the position in the default `list` output, not the filtered view
+* Updated the `overview` command description to accurately reflect that the status breakdown covers active applications only
 
 ### Contributions to the Developer Guide
 * Explained implementation of each feature with sequence diagrams
 * **Architecture Overview:** Documented MVC pattern, package structure, and command execution flow
 * **Main Application Controller (InternTrackr.java):** Detailed startup sequence, error recovery loop, and logging setup with sequence diagrams
-* **Overview Feature:** Documented read-only query pattern and `LinkedHashMap` usage for status ordering
+* **Overview Feature:** Documented read-only query pattern, `LinkedHashMap` usage for status ordering, and `isArchived()` filtering logic for the Active Status Breakdown
 * **Offer Feature:** Detailed salary validation pipeline, automatic status update logic, and salary formatting bug fix
 * **Contact Feature:** Explained email validation, index bounds checking, and defensive design
 * **Help Feature:** Documented URL-based design for maintainability
+* **Object Diagram:** Added `SanjaiObjectDiagram`
+* **Diagram quality fixes (PE-D):** Identified and corrected incorrect message flow direction across 5 sequence diagrams (arrows were drawn `UI → InternTrackr` when the actual code has `InternTrackr` calling `ui.readCommand()`); added activation bars consistently across all 8 authored diagrams; removed a redundant end-to-end diagram that duplicated the overview sequence; corrected a factually inaccurate design consideration that claimed `null` was passed to read-only commands (audited `InternTrackr.java` to confirm `storage` is always passed uniformly)
 
 ---
 
 ## Contributions to the Developer Guide - Extracts
 
 ### Overview Feature Implementation
-The `OverviewCommand` queries `ApplicationList` to calculate application counts and aggregates status frequencies using a `LinkedHashMap` to preserve insertion order. This read-only operation avoids invoking `Storage` entirely, demonstrating the principle of minimizing side effects. The aggregated data is passed to `Ui` for formatting and display.
+The `OverviewCommand` queries `ApplicationList` for the total count and iterates through all applications, calling `isArchived()` on each to skip archived entries. Status frequencies for active applications are aggregated using a `LinkedHashMap` to preserve insertion order defined by `Application.VALID_STATUSES`. The results are displayed under the heading "Active Status Breakdown", making it explicit to users that archived applications are intentionally excluded. This read-only operation never invokes `Storage`, demonstrating the principle of minimising side effects.
 
 ### Offer Feature Implementation
 The `OfferCommand` follows a strict validation pipeline: verify index bounds, parse and validate salary (rejecting scientific notation and enforcing 2 decimal place limit), update the application's salary field, check if status needs normalization to "Offered", then immediately trigger `Storage#save()` to ensure financial data persists. The salary formatting uses `String.format("$%.2f", salary)` to handle floating-point display issues and prevent scientific notation in output.
 
 ### Contact Feature Implementation
-The `ContactCommand` validates index bounds, verifies email format (exactly one `@`, at least one dot after `@`, no spaces), updates the internal state with recruiter details, and immediately invokes `Storage#save()` to persist networking information. Email validation is implemented as a reusable helper method available to other commands.
+The `ContactCommand` validates the application index using `getActiveApplication()` to resolve the display index against active entries only, verifies email format (exactly one `@`, at least one dot after `@`, no spaces), updates the application's recruiter details via `setContactDetails()`, and immediately invokes `Storage#save()` to persist networking information. Email validation is implemented as a private helper method within the command class.
 
 ### Help Feature Implementation
 The `HelpCommand` displays a hardcoded URL to the exhaustive online User Guide via `Ui`. This design keeps the application lightweight and ensures documentation can be updated without rebuilding the binary.
