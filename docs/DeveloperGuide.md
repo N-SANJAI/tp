@@ -425,29 +425,6 @@ The parser performs the following checks:
 
 ---
 
-#### 6. Contact Feature (Summary)
-
-The `contact` feature stores recruiter details directly in `Application`.
-
-The diagram below shows contact fields embedded within `Application`:
-
-![Contact Class Diagram](images/ContactClassDiagram.png)
-
-**6.1 Design Considerations**
-
-**Aspect: Separate class vs inline fields**
-
-* **Alternative 1:** Separate `Contact` class
-    + Pros: More extensible
-    + Cons: Over-engineering
-
-* **Alternative 2 (Current Choice):** Inline storage
-    + Pros: Simpler
-    + Cons: Less flexible
-    + **Reasoning:** Current requirements do not justify additional abstraction
-
----
-
 <!-- @@author -->
 
 <!-- @@author Shyamal -->
