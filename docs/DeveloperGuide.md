@@ -610,7 +610,7 @@ When `AddCommand#execute()` is called:
 1. It constructs a new `Application` using the parsed company and role.
 2. It checks `ApplicationList#hasApplication()` to prevent duplicate entries.
 3. If a duplicate is found, it informs the user and exits without saving.
-4. Otherwise, it adds the new application to the list and shows confirmation messages through `Ui`.
+4. Otherwise, it adds the new application to the list and shows confirmation messages through `Ui`. The count shown uses `ApplicationList#countActive()` so that the number reported to the user reflects the active list only, excluding any archived entries.
 5. It immediately calls `Storage#save()` so the new application is persisted.
 
 ![Add Command Sequence Diagram](images/AaravAddCommandSequence.png)
@@ -640,20 +640,23 @@ The feature is implemented through `DeleteCommandParser` and `DeleteCommand`.
 The `DeleteCommandParser#parse()` method:
 
 1. Verifies that an index is provided.
-2. Parses the index as an integer.
-3. Rejects non-numeric or non-positive values with an `InternTrackrException`.
+2. Checks if the argument begins with the keyword `archive`. If so, sets an `isArchived` flag to `true` and strips the keyword before parsing the remaining index.
+3. Parses the index as an integer.
+4. Rejects non-numeric or non-positive values with an `InternTrackrException`.
+
+This allows both `delete INDEX` (active applications) and `delete archive INDEX` (archived applications) to be supported from a single parser.
 
 **3.1.2 Execution Logic**
 
 When `DeleteCommand#execute()` is called:
 
-1. It resolves the provided index against the active (non-archived) applications only using `ApplicationList#getActiveApplication()`.
+1. Based on the `isArchived` flag, it resolves the provided index using either `ApplicationList#getActiveApplication()` (for active deletions) or `ApplicationList#getArchivedApplication()` (for archived deletions). If the list is empty, a friendly message `"No applications found. Start adding some!"` is shown instead of a misleading range error.
 2. It retrieves the full backing list via `ApplicationList#getApplications()` and performs a linear scan by object identity to find the application's actual position in the backing list.
 3. It removes the application from the backing list using `ApplicationList#deleteApplication()`.
-4. It displays a confirmation message through `Ui`.
+4. It displays a confirmation message through `Ui`, using `ApplicationList#countActive()` to show the number of remaining active applications.
 5. It immediately calls `Storage#save()` so the deletion is persisted.
 
-This design ensures that the index used by `delete` always matches what the user sees in the default `list` output, which excludes archived applications.
+This design ensures that the index used by `delete` always matches what the user sees in the corresponding list view (`list` for active, `list archive` for archived).
 
 ![Delete Command Sequence Diagram](images/AaravDeleteCommandSequence.png)
 
@@ -664,8 +667,16 @@ This design ensures that the index used by `delete` always matches what the user
 * **Alternative 1:** Delete directly by backing-list index.
   * *Pros:* Simpler internal implementation.
   * *Cons:* The index would not match the default list shown to users once archived entries exist.
-* **Alternative 2 (Current Choice):** Resolve the index against active applications first.
+* **Alternative 2 (Current Choice):** Resolve the index against the relevant view (active or archived).
   * *Reasoning:* This keeps command behavior consistent with the visible list and reduces user confusion.
+
+**Aspect: Deleting archived applications**
+
+* **Alternative 1:** Require users to unarchive an application before deleting it.
+  * *Pros:* Simpler command — only one deletion path.
+  * *Cons:* Forces an unnecessary unarchive step, cluttering the active list temporarily just to delete a record.
+* **Alternative 2 (Current Choice):** Support `delete archive INDEX` as a first-class command.
+  * *Reasoning:* Users sometimes want to permanently discard an archived application without restoring it first. Adding the `archive` keyword keeps it explicit and mirrors the same index the user sees in `list archive`.
 
 ---
 

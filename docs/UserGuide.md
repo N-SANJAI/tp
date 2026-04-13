@@ -83,18 +83,18 @@ Here are your internship applications:
 
 ### Deleting an application : `delete`
 
-Deletes the specified active application.
+Deletes the specified active application, or optionally an archived application directly.
 
-**Format:** `delete INDEX`
+**Format:** `delete INDEX` or `delete archive INDEX`
 
-- Deletes the application at the given `INDEX`.
-- The index refers to the index number shown in the default application list.
+- `delete INDEX` — deletes the active application at the given `INDEX`, as shown in the default `list` output.
+- `delete archive INDEX` — deletes the archived application at the given `INDEX`, as shown in the `list archive` output. This allows you to permanently remove an archived application without first unarchiving it.
 - `INDEX` must be a positive integer 1, 2, 3, ...
-- Archived applications are not shown in the default list, so `delete` applies to the active applications currently displayed.
 
 **Examples:**
 
 - `delete 2`
+- `delete archive 1`
 
 ### Updating application status : `status`
 
@@ -362,7 +362,7 @@ InternTrackr data is stored as a file in the home folder (for example, under a `
 | List applications            | `list`                                       | `list`                                                  |
 | List archived applications   | `list archive`                               | `list archive`                                          |
 | Find applications            | `find KEYWORD`                               | `find Shopee`                                           |
-| Delete application           | `delete INDEX`                               | `delete 2`                                              |
+| Delete application           | `delete INDEX` or `delete archive INDEX`     | `delete 2` or `delete archive 1`                        |
 | Update status                | `status INDEX s/STATUS`                      | `status 1 s/Interview`                                  |
 | Log an offer                 | `offer INDEX s/SALARY`                       | `offer 1 s/5000.00`                                     |
 | Archive application          | `archive INDEX`                              | `archive 1`                                             |

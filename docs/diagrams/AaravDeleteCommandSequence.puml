@@ -1,20 +1,33 @@
 @startuml
 actor User
 participant ":Parser" as P
+participant ":DeleteCommandParser" as DCP
 participant ":DeleteCommand" as DC
 participant ":ApplicationList" as AL
 participant ":Storage" as S
 
-User -> P : parse("delete 2")
+User -> P : parse("delete 2") or parse("delete archive 1")
+P -> DCP : parse(arguments)
+note right of DCP
+  Detects optional "archive" keyword.
+  Sets isArchived flag accordingly.
+end note
+DCP --> P : DeleteCommand(index, isArchived)
 P --> DC : create
 
-DC -> AL : getActiveApplication(2)
+alt isArchived = false (active deletion)
+    DC -> AL : getActiveApplication(index)
+else isArchived = true (archived deletion)
+    DC -> AL : getArchivedApplication(index)
+end
 AL --> DC : appToRemove
 note right of DC
   Linear scan by object identity
   to find backingIndex in full list
 end note
 DC -> AL : deleteApplication(backingIndex)
+DC -> AL : countActive()
+AL --> DC : activeCount
 DC -> S : save(...)
 DC --> User : confirmation message
 @enduml
