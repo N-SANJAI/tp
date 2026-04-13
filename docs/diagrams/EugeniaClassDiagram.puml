@@ -1,0 +1,27 @@
+@startuml
+class Application {
+    + getDeadlines(): DeadlineList
+}
+
+class DeadlineList {
+    + addDeadline(deadline: Deadline): void
+    + deleteDeadline(index: int): Deadline
+    + getSize(): int
+    + getDeadline(index: int): Deadline
+    + getDeadlines(): List<Deadline>
+}
+
+class Deadline {
+    - deadlineType: String
+    - dueDate: LocalDate
+    - isDone: boolean
+    + getDeadlineType(): String
+    + getDueDate(): LocalDate
+    + getIsDone(): boolean
+    + setDone(): void
+    + setNotDone(): void
+}
+
+Application "1" *-- "1" DeadlineList
+DeadlineList "1" *-- "0..*" Deadline
+@enduml
