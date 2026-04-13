@@ -129,14 +129,3 @@ structured and extensible component integrated across the system.
 * Assisted teammates in:
     - Debugging parser-related issues
     - Structuring command and model interactions
-
-### 8. Contributions Beyond the Project Team
-
-* **Bug reporting during PE dry run**  
-  Reported bugs in other teams’ products, including edge cases in parsing and incorrect command behaviour.
-
-* **Knowledge sharing**  
-  Shared insights on:
-    - Parser design (modular vs monolithic)
-    - Defensive coding practices
-    - CS2113 workflow strategies (commits, testing, PR structure)
