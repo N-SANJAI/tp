@@ -6,7 +6,7 @@ InternTrackr is a CLI-first internship application manager for university studen
 
 1. Ensure you have **Java 17** or above installed.
 2. Download the latest `internTrackr.jar`.
-3. Copy the jar file into the folder you want to use as the home folder for Interntrackr.
+3. Copy the jar file into the folder you want to use as the home folder for internTrackr.
 4. Open a terminal, `cd` into that folder, and run:
 
    ```
@@ -35,10 +35,7 @@ Refer to the [Features](#features) section below for details.
 > **Notes about the command format:**
 >
 > - Words in `UPPER_CASE` are parameters to be supplied by you.
-    >   - Example: in `add c/COMPANY`, `COMPANY` can be `add c/"Shopee"` ...
-> - Items in square brackets are optional.
-    >   - Example: `deadline add ID t/TYPE d/DATE [n/NOTES]`
-> - Parameters can be in any order unless stated otherwise.
+    >   - Example: in `add c/COMPANY`, `COMPANY` can be `Shopee` or `"Shopee"` (with optional quotes).
 > - For fields containing spaces, you may optionally wrap them in quotes `"..."` for clarity.
 > - Dates use the format `DD-MM-YYYY`.
 > - **CRITICAL:** Do not use the pipe character (`|`) anywhere in your inputs. It is strictly prohibited and will cause an error.
@@ -64,7 +61,7 @@ Adds an internship application.
 
 - Creates a new application with the given company and role.
 - Prefixes can be provided in any order.
-- Duplicate applications are not allowed.
+- Duplicate applications are not allowed. If you want to re-add an application that already exists in the archive (e.g. reapplying next cycle), please first delete the archived entry using `delete archive INDEX`, then use `add` again.
 - The count shown in the confirmation message reflects only active (non-archived) applications.
 
 **Examples:**

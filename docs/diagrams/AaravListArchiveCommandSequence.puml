@@ -7,7 +7,7 @@ participant ":Ui" as UI
 
 User -> P : parse("list archive")
 note right of P : Handled directly, no parser class.
-P --> LAC : create
+P -> LAC : <<create>>
 
 loop first pass: count archived apps
     LAC -> AL : getApplication(i)
@@ -16,13 +16,21 @@ end
 
 alt no archived applications
     LAC -> UI : showMessage("No archived applications found.")
+    activate UI
     UI --> User : empty message
+    deactivate UI
 else archived applications exist
     LAC -> UI : showMessage(header)
+    activate UI
+    UI --> LAC
+    deactivate UI
     loop second pass: display each archived app
         LAC -> AL : getApplication(i)
         AL --> LAC : app
         LAC -> UI : showMessage(app details)
+        activate UI
+        UI --> LAC
+        deactivate UI
     end
     UI --> User : archived applications list
 end

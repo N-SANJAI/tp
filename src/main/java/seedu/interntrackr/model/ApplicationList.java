@@ -100,7 +100,11 @@ public class ApplicationList {
         int totalActive = countActive();
         logger.warning("Invalid active display index: " + displayIndex + ". Active count: " + totalActive);
         if (totalActive == 0) {
-            throw new InternTrackrException("No applications found. Start adding some!");
+            if (applications.isEmpty()) {
+                throw new InternTrackrException("No applications found. Start adding some!");
+            } else {
+                throw new InternTrackrException("No active applications. Use 'list archive' to view archived ones.");
+            }
         }
         throw new InternTrackrException("Invalid application index. Please provide a number between 1 and "
                 + totalActive + ".");
@@ -131,7 +135,7 @@ public class ApplicationList {
         int totalArchived = countArchived();
         logger.warning("Invalid archived display index: " + displayIndex + ". Archived count: " + totalArchived);
         if (totalArchived == 0) {
-            throw new InternTrackrException("There are no archived applications to unarchive.");
+            throw new InternTrackrException("There are no archived applications.");
         }
         throw new InternTrackrException("Invalid application index. Please provide a number between 1 and "
                 + totalArchived + ".");

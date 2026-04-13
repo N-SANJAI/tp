@@ -39,8 +39,8 @@ public class AddCommandParser {
         String role;
 
         try {
-            int cIndex = paddedArgs.indexOf(searchCompany);
-            int rIndex = paddedArgs.indexOf(searchRole);
+            int cIndex = paddedArgs.lastIndexOf(searchCompany);
+            int rIndex = paddedArgs.lastIndexOf(searchRole);
 
             if (cIndex < rIndex) {
                 company = paddedArgs.substring(cIndex + searchCompany.length(), rIndex).trim().replace("\"", "");

@@ -8,9 +8,9 @@ participant ":Ui" as UI
 participant ":Storage" as S
 
 User -> P : parse("add c/Google r/SWE")
-P --> AC : create
+P -> AC : <<create>>
 
-AC --> APP : create
+AC -> APP : <<create>>
 
 AC -> AL : hasApplication(newApp)
 

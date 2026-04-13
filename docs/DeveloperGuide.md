@@ -104,33 +104,6 @@ The `HelpCommand` invokes `Ui` to display a hardcoded URL to the exhaustive onli
 
 ![Help Command Sequence Diagram](images/SanjaiHelpCommandSequence.png)
 
-#### 7. Advanced Deadline Management (Undone & Delete)
-
-The application’s deadline capabilities were expanded to allow users to fully manage the state of their tasks by unmarking completed deadlines or deleting them entirely.
-
-**Implementation Details:**
-
-1. The `DeadlineCommandParser` was updated to securely parse the `undone` and `delete` subcommands, intercepting invalid (non-numerical) indices and preventing Java stack trace leaks (`NumberFormatException`).
-2. `DeadlineUndoneCommand` and `DeadlineDeleteCommand` execute by first resolving the active application, then retrieving its `DeadlineList`.
-3. Strict bounds-checking is performed on both the application index and the deadline index.
-4. For `undone`, the command checks if the deadline is *already* incomplete. If so, it throws an `InternTrackrException` to prevent redundant operations and unnecessary disk writes. Otherwise, it updates the state and invokes `Storage#save()`.
-5. For `delete`, the command removes the specific deadline from the internal `DeadlineList` and triggers a save.
-
-#### 8. Strict Date Validation
-
-To ensure data integrity for internship timelines, the date parsing logic for deadlines was overhauled to prevent silent mutations of invalid dates.
-
-**Implementation Details:**
-
-By default, Java's `DateTimeFormatter` uses `ResolverStyle.SMART`, which silently auto-corrects invalid dates (e.g., automatically converting `31-02-2026` to `28-02-2026`).
-
-1. The parser was upgraded to use `ResolverStyle.STRICT` alongside the `uuuu` year format.
-2. Additional logic was injected to explicitly evaluate `dueDate.isBefore(LocalDate.now())`.
-3. If a user inputs a non-existent calendar date (like Feb 29th on a non-leap year) or a past date, the parser immediately catches it and throws an `InternTrackrException`.
-
-#### 9. UI List Summary Abstraction (`toSummaryString`)
-
-To handle applications accumulating large numbers of deadlines without cluttering the CLI, a new output abstraction was introduced for list-based commands.
 
 **Implementation Details:**
 
@@ -708,7 +681,7 @@ This allows both `delete INDEX` (active applications) and `delete archive INDEX`
 
 When `DeleteCommand#execute()` is called:
 
-1. Based on the `isArchived` flag, it resolves the provided index using either `ApplicationList#getActiveApplication()` (for active deletions) or `ApplicationList#getArchivedApplication()` (for archived deletions). If the list is empty, a friendly message `"No applications found. Start adding some!"` is shown instead of a misleading range error.
+1. Based on the `isArchived` flag, it resolves the provided index using either `ApplicationList#getActiveApplication()` (for active deletions) or `ApplicationList#getArchivedApplication()` (for archived deletions). If the active list is empty, a friendly message `"No applications found. Start adding some!"` is shown instead of a misleading range error. If all applications have been archived, the message `"No active applications. Use 'list archive' to view archived ones."` is shown instead. Similarly, when `delete archive INDEX` is used on an empty archive, the message `"There are no archived applications."` is shown.
 2. It retrieves the full backing list via `ApplicationList#getApplications()` and performs a linear scan by object identity to find the application's actual position in the backing list.
 3. It removes the application from the backing list using `ApplicationList#deleteApplication()`.
 4. It displays a confirmation message through `Ui`, using `ApplicationList#countActive()` to show the number of remaining active applications.
@@ -1181,22 +1154,6 @@ deadline done 2 i/2
 ```
 
 **Expected:** Marks the `"Tech Round"` deadline as completed `[X]`.
-
-**Test:**
-
-```text
-deadline undone 2 i/2
-```
-
-**Expected:** Marks the `"Tech Round"` deadline back to incomplete `[ ]`.
-
-**Test:**
-
-```text
-deadline delete 2 i/2
-```
-
-**Expected:** Completely removes the `"Tech Round"` deadline from Meta. Running `deadline list 2` immediately after should now only show 2 deadlines.
 
 ### 4. Testing Error and Data Corruption Handling
 

@@ -8,7 +8,7 @@ participant ":Ui" as UI
 participant ":Storage" as S
 
 User -> P : parse("unarchive 1")
-P --> UC : create
+P -> UC : <<create>>
 
 UC -> AL : getArchivedApplication(1)
 AL --> UC : app

@@ -1,5 +1,6 @@
 @startuml
 actor User
+participant ":InternTrackr" as IT
 participant ":Parser" as P
 participant ":DeleteCommandParser" as DCP
 participant ":DeleteCommand" as DC
@@ -7,19 +8,21 @@ participant ":ApplicationList" as AL
 participant ":Ui" as UI
 participant ":Storage" as S
 
-User -> P : parse("delete 2") or parse("delete archive 1")
+User -> IT : run("delete 2") or run("delete archive 1")
+IT -> P : parse(arguments)
 P -> DCP : parse(arguments)
 note right of DCP
   Detects optional "archive" keyword.
   Sets isArchived flag accordingly.
 end note
-DCP --> P : DeleteCommand(index, isArchived)
+DCP --> P : <<create>> DeleteCommand(index, isArchived)
+P --> IT : command
 
 alt isArchived = false (active deletion)
-    P -> DC : execute(...)
+    IT -> DC : execute(...)
     DC -> AL : getActiveApplication(index)
 else isArchived = true (archived deletion)
-    P -> DC : execute(...)
+    IT -> DC : execute(...)
     DC -> AL : getArchivedApplication(index)
 end
 AL --> DC : appToRemove

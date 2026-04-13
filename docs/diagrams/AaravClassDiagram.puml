@@ -40,5 +40,5 @@ Parser ..> XYZCommandParser : delegates to
 
 XYZCommand ..> ApplicationList : uses
 
-ApplicationList "1" *-- "0..*" Application
+ApplicationList "1" o-- "0..*" Application
 @enduml
