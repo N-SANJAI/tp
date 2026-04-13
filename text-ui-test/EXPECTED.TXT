@@ -7,37 +7,37 @@ https://ay2526s2-cs2113-t14-1.github.io/tp/UserGuide.html
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 1 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Meta | Role: Data Scientist | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Meta | Role: Data Scientist | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 2 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Apple | Role: Product Manager | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Apple | Role: Product Manager | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 3 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Amazon | Role: Backend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Amazon | Role: Backend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 4 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Netflix | Role: Frontend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Netflix | Role: Frontend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 5 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 6 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this application:
-  Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 7 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -57,20 +57,20 @@ You have already tracked an application for Software Engineer at Google.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-2. Company: Meta | Role: Data Scientist | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-3. Company: Apple | Role: Product Manager | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-4. Company: Amazon | Role: Backend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-5. Company: Netflix | Role: Frontend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-6. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-7. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+2. Company: Meta | Role: Data Scientist | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+3. Company: Apple | Role: Product Manager | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+4. Company: Amazon | Role: Backend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+5. Company: Netflix | Role: Frontend Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+6. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+7. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Error: The find command requires a keyword! (e.g., find Google)
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching applications in your list:
-1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 No matching applications found.
@@ -122,17 +122,17 @@ Accepted
 ____________________________________________________________
 ____________________________________________________________
 Here are the applications with status: Interview
-3. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+3. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Filter cleared. Showing all applications:
-1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-2. Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-3. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-4. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-5. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-6. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-7. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+2. Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+3. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+4. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+5. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+6. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+7. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Error: Invalid format. Usage: contact INDEX c/NAME e/EMAIL
@@ -248,22 +248,22 @@ Error: Invalid application index. Please provide a number between 1 and 7.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've archived this application:
-  Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
+  Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
 It will no longer appear in the default list. Use 'list archive' to view it.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've archived this application:
-  Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 It will no longer appear in the default list. Use 'list archive' to view it.
 ____________________________________________________________
 ____________________________________________________________
 Here are your archived internship applications:
-1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
-2. Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
+2. Company: Meta | Role: Data Scientist | Status: Pending | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've restored this application to your active list:
-  Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
+  Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
 It will now appear in the default list again.
 ____________________________________________________________
 ____________________________________________________________
@@ -271,25 +271,25 @@ No matching applications found.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
-2. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-3. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-4. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-5. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-6. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
+2. Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+3. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+4. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+5. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+6. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this application:
-  Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Apple | Role: Product Manager | Status: Interview | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 5 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
-2. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-3. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-4. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-5. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
+2. Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+3. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+4. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+5. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Overview:
@@ -312,7 +312,7 @@ Error: Invalid application index. Please provide a number between 1 and 5.
 ____________________________________________________________
 ____________________________________________________________
 Noted. I've removed this application:
-  Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+  Company: Amazon | Role: Backend Intern | Status: Rejected | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 Now you have 4 active application(s) in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -336,11 +336,11 @@ Note updated for: Google | Software Engineer
 ____________________________________________________________
 ____________________________________________________________
 Here are your internship applications:
-1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: [Deadline Type: Online Assessment | Due Date: 2026-12-12 | Done: [X], Deadline Type: Technical Interview | Due Date: 2026-12-18 | Done: [ ]]
+1. Company: Google | Role: Software Engineer | Status: Offered | Salary: $8500.50 | Contact Name: John Doe | Contact Email: john@google.com | Deadlines: Online Assessment (2026-12-12) [Done], Technical Interview (2026-12-18) [Pending]
    Note: Strong Java skills required
-2. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-3. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
-4. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: null
+2. Company: Netflix | Role: Frontend Intern | Status: Accepted | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+3. Company: Tesla | Role: Hardware Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
+4. Company: Microsoft | Role: Cloud Intern | Status: Applied | Salary: - | Contact Name: - | Contact Email: - | Deadlines: -
 ____________________________________________________________
 ____________________________________________________________
 Are you sure you want to clear all data? Type 'yes' to confirm:
