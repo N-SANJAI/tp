@@ -27,8 +27,9 @@ across spreadsheets, notes, and emails.
   with precise line numbers.
 
 * **List Command (`list`)**: Implemented the `list` command to display all tracked
-  applications. Enhanced in v2.0 to display notes indented below each application entry
-  when present, keeping the view clean for applications without notes.
+  active applications. Enhanced in v2.0 to display notes indented below each application
+  entry when present, keeping the view clean for applications without notes. Only
+  non-archived applications are shown.
 
 * **Note Command (`note`)**: Implemented the `note` command (v2.0) allowing users to
   attach free-text insights to any application — such as interview impressions, tech
@@ -62,28 +63,34 @@ across spreadsheets, notes, and emails.
   accommodate the note field, maintaining backward compatibility and updating affected
   tests accordingly.
 
+* **Deadlines Display Fix (v2.1)**: Fixed `DeadlineList#toString()` which was returning
+  the string `"null"` for empty deadline lists and a raw Java `ArrayList` dump for
+  non-empty lists. Replaced with a clean user-facing format showing deadline type, date,
+  and completion status, consistent with how all other empty fields display as `-`.
+
 ### 4. Testing
 
-* **`StorageTest`**: Wrote 5 JUnit test cases covering save/load round-trips with valid
-  data, empty list handling, non-existent file loading, corrupted data detection, and
-  file creation verification. Tests use a system temp directory to avoid side effects.
+* **`StorageTest`**: Wrote 11 JUnit test cases covering save/load round-trips with valid
+    data, empty list handling, non-existent file loading, corrupted data detection,
+    file creation verification, archived application flag preservation, mixed
+    archived/non-archived lists, and invalid deadline date handling.
 
-* **`NoteCommandTest`**: Wrote 10 JUnit test cases covering valid note assignment,
+* **`NoteCommandTest`**: Wrote 11 JUnit test cases covering valid note assignment,
   overwrite behaviour, notes on specific indices without affecting others, out-of-range
   index handling, notes with special characters, and null/assertion guard checks. Uses a
   `CapturingUi` test double to verify output without touching the console.
 
-* **`NoteCommandParserTest`**: Wrote 9 JUnit test cases applying equivalence partitioning
-  across valid inputs, missing prefix, empty/blank note content, non-numeric index, zero
-  index, negative index, and null/blank arguments — raising `NoteCommandParser` coverage
-  from 0% to full coverage.
+* **`NoteCommandParserTest`**: Wrote 12 JUnit test cases applying equivalence
+  partitioning across valid inputs, missing prefix, empty/blank note content,
+  non-numeric index, zero index, negative index, and null/blank arguments — raising
+  `NoteCommandParser` coverage from 0% to full coverage.
 
 ### 5. Contributions to the User Guide
 
 * Wrote the **Adding a note** section describing the `note` command format, examples,
-  and overwrite behaviour.
+  overwrite behaviour, and input restrictions.
 * Updated the **Listing all applications** section to document the note display
-  behaviour in `list` output.
+  behaviour and clarify that only active applications are shown.
 
 > #### Adding a note: `note`
 >
@@ -95,7 +102,10 @@ across spreadsheets, notes, and emails.
 >
 > * Adds or **overwrites** the existing note for the application at `INDEX`.
 > * `INDEX` must be a positive integer 1, 2, 3, ...
-> * `NOTE_CONTENT` can contain any text including spaces and special characters.
+> * `NOTE_CONTENT` can contain any text including spaces and special characters,
+    >   except the pipe character (`|`) which is reserved for internal storage.
+> * Multi-line input is not supported. Only single-line text can be entered as note
+    >   content.
 >
 > **Examples:**
 > * `note 1 n/Strong Java skills required, prepare LeetCode`
@@ -106,8 +116,9 @@ across spreadsheets, notes, and emails.
 
 > #### Listing all applications: `list`
 >
-> Shows a list of all tracked internship applications. If an application has a note,
-> it will be displayed indented on the line directly below that application's details.
+> Shows a list of all tracked internship applications. Only active (non-archived)
+> applications are shown. If an application has a note, it will be displayed indented
+> on the line directly below that application's details.
 >
 > **Format:** `list`
 >
@@ -149,7 +160,7 @@ across spreadsheets, notes, and emails.
 > focused helpers — `parseStatus()`, `parseSalary()`, `parseNote()`, and
 > `parseDeadlines()` — following SLAP. Corrupted lines throw an `InternTrackrException`
 > with the offending line number for easy user diagnosis.
->
+
 > #### ApplicationList Defensive Design
 >
 > `ApplicationList#getApplications()` returns `Collections.unmodifiableList()` so
@@ -157,18 +168,19 @@ across spreadsheets, notes, and emails.
 > and `deleteApplication(int index)` validate the 1-based index and throw
 > `InternTrackrException` with a user-friendly message if out of range, preventing raw
 > `IndexOutOfBoundsException` from reaching the user.
->
+
 > #### ListCommand and UI Abstraction
 >
 > `ListCommand#execute()` routes all output through `Ui#showMessage()`. This ensures
 > output is interceptable in tests via a `CapturingUi` subclass, consistent with how
 > all other commands handle output. Notes are displayed conditionally — only when
 > non-null and non-blank — keeping the view clean.
->
+
 > #### Note Feature Implementation
 >
 > `NoteCommandParser` validates the `note INDEX n/NOTE_CONTENT` format, checking for
 > blank input, missing prefix, empty content, and non-positive index before constructing
 > a `NoteCommand`. `NoteCommand#execute()` retrieves the target application via
-> `ApplicationList#getApplication()`, updates the note field, persists immediately via
-> `Storage#save()`, and confirms via `Ui#showMessage()`.
+> `ApplicationList#getActiveApplication()`, updates the note field, persists immediately
+> via `Storage#save()`, and confirms via two `Ui#showMessage()` calls — one for the
+> application identity and one for the updated note content.

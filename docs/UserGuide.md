@@ -223,6 +223,8 @@ or any other application-specific insights.
 
 > **Note:** Running `note` on an application that already has a note will
 > **overwrite** the previous note entirely.
+> **Note:** Multi-line input is not supported. Only single-line text can be
+> entered as note content.
 
 ### Filtering by status : `filter`
 
