@@ -55,6 +55,11 @@ public class OfferCommandParser {
 
             double salary = Double.parseDouble(salaryStr);
 
+            if (Double.isNaN(salary) || Double.isInfinite(salary)) {
+                logger.warning("Salary input evaluated to NaN or Infinity.");
+                throw new InternTrackrException("Salary must be a valid, finite number.");
+            }
+
             if (salary < 0) {
                 throw new InternTrackrException("Salary cannot be negative.");
             }

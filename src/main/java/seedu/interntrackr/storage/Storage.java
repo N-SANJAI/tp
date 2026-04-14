@@ -107,10 +107,12 @@ public class Storage {
         boolean isArchived = false;
         int deadlineEndIndex = parts.length;
 
-        String lastPart = parts[parts.length - 1].trim();
-        if (lastPart.equalsIgnoreCase("archived:true")) {
-            isArchived = true;
-            deadlineEndIndex = parts.length - 1;
+        if (parts.length > INDEX_DEADLINES_START) {
+            String lastPart = parts[parts.length - 1].trim();
+            if (lastPart.equalsIgnoreCase("archived:true")) {
+                isArchived = true;
+                deadlineEndIndex = parts.length - 1;
+            }
         }
 
         DeadlineList deadlineList = parseDeadlines(parts, lineNumber, line, deadlineEndIndex);

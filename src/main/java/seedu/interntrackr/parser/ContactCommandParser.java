@@ -80,6 +80,12 @@ public class ContactCommandParser {
                 throw new InternTrackrException("Contact name and contact email cannot be empty.");
             }
 
+            if (contactName.equals("-") || contactEmail.equals("-")) {
+                logger.warning("Contact command used restricted placeholder character '-'.");
+                throw new InternTrackrException("Contact name and email cannot be exactly '-' "
+                        + "as it conflicts with the save data format.");
+            }
+
             if (containsDuplicatePrefix(arguments, PREFIX_CONTACT_NAME)
                     || containsDuplicatePrefix(arguments, PREFIX_CONTACT_EMAIL)) {
                 logger.warning("Contact command contains duplicate c/ or e/ prefixes.");
