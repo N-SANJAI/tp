@@ -52,7 +52,47 @@ structured and extensible component integrated across the system.
     - Applied defensive coding (validation, error handling)
     - Updated and maintained test cases for evolving data model
 
-### 4. Contributions to the User Guide
+### 4. Contributions to Team-Based Tasks
+
+* Participated in:
+    - Feature integration across releases (v1.0 → v2.0)
+    - Ensuring consistency between implementation and documentation
+    - JAR release preparation and smoke testing
+
+* Helped maintain:
+    - Code quality through defensive programming
+    - Consistent command structure across features
+
+* **Project management & coordination**
+    - Organised and maintained GitHub issues and task breakdown
+    - Coordinated feature workflow across releases (v1.0 → v2.0)
+
+* **Release management**
+    - Built and released **v1.1 JAR**
+    - Performed smoke testing and ensured consistency with User Guide
+
+* **Integration work**
+    - Ensured features worked cohesively across parser, model, UI, and storage
+    - Maintained consistency between documentation and implementation
+
+* **Documentation navigation improvement**
+    - Updated About Us page to include hyperlinks to each team member’s PPP
+    - Improved accessibility and navigation for evaluators reviewing individual contributions
+
+### 5. Review / Mentoring Contributions
+
+* Reviewed teammates’ PRs and:
+    - Suggested improvements in **defensive coding and validation**
+    - Ensured adherence to project structure and conventions
+    - Identified mismatches between implementation and documentation
+
+* Assisted teammates in:
+    - Debugging parser-related issues
+    - Structuring command and model interactions
+
+---
+
+## Contributions to the User Guide
 
 * Documented:
     - `deadline add`
@@ -66,7 +106,9 @@ structured and extensible component integrated across the system.
     - Realistic examples
     - Consistent CLI-style documentation
 
-### 5. Contributions to the Developer Guide
+---
+
+## Contributions to the Developer Guide
 
 * **Deadline Subsystem Design and Documentation**
     - Designed and documented a full deadline subsystem supporting multiple deadlines per application via a `DeadlineList` abstraction
@@ -95,41 +137,3 @@ structured and extensible component integrated across the system.
         - deadline model structure
         - parser delegation flow
         - command execution flow for each deadline feature
-
-### 6. Contributions to Team-Based Tasks
-
-* Participated in:
-    - Feature integration across releases (v1.0 → v2.0)
-    - Ensuring consistency between implementation and documentation
-    - JAR release preparation and smoke testing
-
-* Helped maintain:
-    - Code quality through defensive programming
-    - Consistent command structure across features
-
-* **Project management & coordination**
-    - Organised and maintained GitHub issues and task breakdown
-    - Coordinated feature workflow across releases (v1.0 → v2.0)
-
-* **Release management**
-    - Built and released **v1.1 JAR**
-    - Performed smoke testing and ensured consistency with User Guide
-
-* **Integration work**
-    - Ensured features worked cohesively across parser, model, UI, and storage
-    - Maintained consistency between documentation and implementation
-
-* **Documentation navigation improvement**
-    - Updated About Us page to include hyperlinks to each team member’s PPP
-    - Improved accessibility and navigation for evaluators reviewing individual contributions
-
-### 7. Review / Mentoring Contributions
-
-* Reviewed teammates’ PRs and:
-    - Suggested improvements in **defensive coding and validation**
-    - Ensured adherence to project structure and conventions
-    - Identified mismatches between implementation and documentation
-
-* Assisted teammates in:
-    - Debugging parser-related issues
-    - Structuring command and model interactions
