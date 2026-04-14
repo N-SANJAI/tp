@@ -3,7 +3,7 @@
 ## Acknowledgements
 
 * **SE-EDU Initiative:** The overall architecture of this application (particularly the separation of `Ui`, `Parser`, `Storage`, and `Command` classes) was inspired by the [SE-EDU AddressBook-Level2 and Duke/ip projects](https://se-education.org/), created for software engineering education.
-* **Libraries:** Libraries: This project relies solely on standard Java 17 libraries for core execution. [JUnit 5](https://junit.org/junit5/) is used for automated unit testing.
+* **Libraries:** This project relies solely on standard Java 17 libraries for core execution. [JUnit 5](https://junit.org/junit5/) is used for automated unit testing.
 
 ## Design & implementation
 
