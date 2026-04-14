@@ -82,7 +82,8 @@ public class ContactCommandParser {
 
             if (contactName.equals("-") || contactEmail.equals("-")) {
                 logger.warning("Contact command used restricted placeholder character '-'.");
-                throw new InternTrackrException("Contact name and email cannot be exactly '-' as it conflicts with the save data format.");
+                throw new InternTrackrException("Contact name and email cannot be exactly '-' "
+                        + "as it conflicts with the save data format.");
             }
 
             if (containsDuplicatePrefix(arguments, PREFIX_CONTACT_NAME)

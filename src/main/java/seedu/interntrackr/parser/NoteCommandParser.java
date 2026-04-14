@@ -24,7 +24,8 @@ public class NoteCommandParser {
         int index = parseIndex(parts[0]);
         String note = parts[1].trim();
         if (note.equals("-")) {
-            throw new InternTrackrException("Note content cannot be exactly '-' as it conflicts with the save data format.");
+            throw new InternTrackrException("Note content cannot be exactly '-' "
+                    + "as it conflicts with the save data format.");
         }
 
         return new NoteCommand(index, note);
