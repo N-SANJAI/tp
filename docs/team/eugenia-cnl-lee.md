@@ -55,35 +55,29 @@ structured and extensible component integrated across the system.
 ### 4. Contributions to Team-Based Tasks
 
 * Participated in:
-    - Feature integration across releases (v1.0 → v2.0)
-    - Ensuring consistency between implementation and documentation
+    - Feature integration across releases (v1.0 → v2.1)
     - JAR release preparation and smoke testing
 
 * Helped maintain:
     - Code quality through defensive programming
-    - Consistent command structure across features
 
 * **Project management & coordination**
     - Organised and maintained GitHub issues and task breakdown
-    - Coordinated feature workflow across releases (v1.0 → v2.0)
+    - Coordinated feature workflow across releases (v1.0 → v2.1)
 
 * **Release management**
     - Built and released **v1.1 JAR**
-    - Performed smoke testing and ensured consistency with User Guide
 
 * **Integration work**
     - Ensured features worked cohesively across parser, model, UI, and storage
-    - Maintained consistency between documentation and implementation
 
 * **Documentation navigation improvement**
     - Updated About Us page to include hyperlinks to each team member’s PPP
-    - Improved accessibility and navigation for evaluators reviewing individual contributions
 
 ### 5. Review / Mentoring Contributions
 
 * Reviewed teammates’ PRs and:
     - Suggested improvements in **defensive coding and validation**
-    - Ensured adherence to project structure and conventions
     - Identified mismatches between implementation and documentation
 
 * Assisted teammates in:
