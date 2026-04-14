@@ -1,7 +1,7 @@
 # Navaneethan Sanjai - Project Portfolio Page
 
 ## Overview
-**InternTrackr** is a CLI-first internship application manager for university students applying to multiple internships. It helps users track applications, statuses, contacts, offers, and deadlines in one place, instead of juggling spreadsheets, notes, and emails.
+**InternTrackr** is a CLI-first internship application manager for university students applying to multiple internships. It helps users track applications, statuses, contacts, offers, and deadlines in one place instead of juggling spreadsheets, notes, and emails.
 
 ## Summary of Contributions
 
@@ -9,93 +9,34 @@
 [RepoSense Dashboard](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=n-sanjai&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2026-02-20T00%3A00%3A00&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other&filteredFileName=)
 
 ### Enhancements Implemented
-I implemented several user-facing and infrastructure-level enhancements across the project. These contributions span both core architecture and feature work.
+I contributed to both the application architecture and several core user-facing features.
 
-**Core architecture and application flow**
-- Implemented the main application controller in `InternTrackr`, including startup, the read-parse-execute loop, graceful error handling, and fallback to an empty list when stored data is missing or corrupted.
-- Designed the control flow so command errors are caught and shown to the user without crashing the application.
+- Implemented the main application control flow in `InternTrackr`, including startup initialization, the read-parse-execute loop, graceful handling of invalid commands, and fallback recovery from missing or corrupted stored data.
+- Implemented the `overview` command to aggregate active application statuses in a stable order, excluding archived applications from the status breakdown.
+- Implemented the `offer` command for salary tracking, including automatic normalization of application status to `Offered` and immediate persistence through `Storage#save()`.
+- Implemented the `help` command to direct users to the online User Guide without bloating the CLI with large embedded help text.
+- Implemented advanced deadline management through `deadline undone` and `deadline delete`, including parser updates, defensive bounds checking, and prevention of redundant state changes.
+- Strengthened deadline correctness by introducing strict date validation using `ResolverStyle.STRICT` and rejecting invalid or past dates.
+- Implemented `toSummaryString()` in `Application` so list-based commands display concise deadline counts instead of raw internal deadline data.
+- Authored the UG and DG documentation for the `contact` feature, including the sequence diagram and design rationale.
 
-**`overview` command**
-- Implemented the `overview` command to show a quantitative summary of internship applications.
-- Aggregated active application statuses using a `LinkedHashMap` so the displayed order remains stable and meaningful.
-- Explicitly excluded archived applications from the breakdown and labelled the output as **Active Status Breakdown** to avoid ambiguity.
-
-**`offer` command**
-- Implemented the `offer` command for salary tracking.
-- Added logic to update the salary of an application and automatically normalize its status to `"Offered"` when needed.
-- Ensured salary updates are persisted immediately via `Storage#save()`.
-
-**`contact` command documentation**
-- Authored the UG and DG documentation for the `contact` feature (implemented by teammate), including the sequence diagram and design rationale.
-
-**`help` command**
-- Implemented the `help` command to direct users to the full online User Guide instead of embedding large help text inside the CLI.
-- This keeps the application lightweight while allowing documentation to stay up to date.
-
-**Advanced deadline management**
-- Implemented `deadline undone` and `deadline delete` so users can fully manage deadline lifecycle states.
-- Updated `DeadlineCommandParser` to support the new subcommands and handle invalid indices cleanly.
-- Added checks to prevent redundant operations such as unmarking an already incomplete deadline.
-
-**Strict date validation**
-- Strengthened deadline parsing by replacing Java’s default lenient behavior with `ResolverStyle.STRICT` and `uuuu`.
-- Added validation to reject invalid calendar dates and past dates.
-- This fixed a real correctness issue where invalid dates could otherwise be silently rewritten.
-
-**List output abstraction**
-- Implemented `toSummaryString()` in `Application` to improve the output of list-based commands.
-- Instead of showing raw internal deadline data, list views now display clean summaries such as `Deadlines: 2 deadlines`.
-- Integrated this abstraction into `list`, `list archive`, `filter`, and `find` for consistent UI behavior.
-
----
 ### Contributions to the User Guide
-I contributed the UG documentation for:
-- `contact`
-- `offer`
-- `overview`
-- `help`
-- `deadline undone`
-- `deadline delete`
+I documented the UG sections for `offer`, `overview`, `help`, `deadline undone`, and `deadline delete`, and updated command formats, examples, and the command summary table to keep the documentation aligned with the implemented behavior. I also wrote the documentation for the `contact` feature.
 
-I also updated command formats, examples, and parameter constraints, and helped keep the command summary aligned with the implemented behavior.
-
----
 ### Contributions to the Developer Guide
-I authored and updated DG sections covering:
-- Main control flow and architecture
-- UI component responsibilities
-- `overview` feature implementation
-- `offer` feature implementation
-- `contact` feature implementation
-- `help` feature implementation
-- Advanced deadline management (`undone` and `delete`)
-- Strict date validation
-- UI list summary abstraction
-- Design considerations for deadline validation, undone behavior, empty overview state, and uniform dependency passing
-
-I also added and refined multiple UML diagrams, including:
-- Startup sequence diagram
-- Run loop happy-path sequence diagram
-- Run loop error-path sequence diagram
-- Overview command sequence diagram
-- Overview runtime object diagram
-- Offer command sequence diagram
-- Contact command sequence diagram
-- Help command sequence diagram
+I authored and updated DG sections covering the main control flow and architecture, the UI component, `overview`, `offer`, `contact`, `help`, advanced deadline management, strict date validation, and UI list summary abstraction. I also added and refined multiple UML diagrams, including the startup sequence diagram, run loop happy-path and error-path sequence diagrams, overview command sequence diagram, overview object diagram, offer command sequence diagram, contact command sequence diagram, and help command sequence diagram.
 
 ### Contributions to Team-Based Tasks
 - Reviewed and corrected sequence diagrams whose message directions did not match the actual call flow.
 - Standardized diagram style by applying activation bars more consistently.
 - Corrected inaccurate DG design rationale related to dependency passing to read-only commands.
-- Helped fix PE-D issues related to deadline, error handling, and list output formatting.
+- Helped fix PE-D issues related to deadline parsing, error handling, and list output formatting.
 
 ### Review and Mentoring Contributions
-- Helped audit documentation and diagrams for technical correctness and consistency.
-- Identified mismatches between implementation and documentation, especially in control flow and deadline-related behavior.
+I helped audit documentation and diagrams for technical correctness and consistency, and identified mismatches between implementation and documentation, especially in control flow and deadline-related behavior.
 
 ### Contributions Beyond the Project Team
-- Contributed bug fixes discovered during PE-D, especially around invalid deadline dates, inconsistent deadline error handling, and raw internal deadline output in list views.
-- These fixes improved both correctness and user experience in the final product.
+I contributed fixes for issues surfaced during PE-D, especially around invalid deadline dates, inconsistent deadline error handling, and raw internal deadline output in list views. These fixes improved both correctness and user experience.
 
 ---
 
